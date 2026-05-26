@@ -1,0 +1,36 @@
+{
+  "title": "Google Maps Scraper Input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "searchTerms": {
+      "title": "Search term(s)",
+      "type": "array",
+      "description": "List of search terms",
+      "editor": "stringList",
+      "prefill": ["hospitals"]
+    },
+    "location": {
+      "title": "Location",
+      "type": "string",
+      "description": "Use only one location per run",
+      "editor": "textfield",
+      "prefill": "New York, USA"
+    },
+    "maxPlaces": {
+      "title": "Number of places to extract (per search term)",
+      "type": "integer",
+      "editor": "number",
+      "default": 150
+    },
+    "language": {
+      "title": "Language",
+      "type": "string",
+      "editor": "select",
+      "default": "en",
+      "enum": ["en", "es", "fr", "de"],
+      "enumTitles": ["English", "Spanish", "French", "German"]
+    }
+  },
+  "required": ["searchTerms", "location"]
+}
