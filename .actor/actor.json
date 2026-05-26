@@ -1,0 +1,48 @@
+{
+  "actorSpecification": 1,
+  "name": "google-maps-scraper",
+  "title": "Google Maps Scraper",
+  "description": "Scrape places from Google Maps by search terms and location. Get name, address, phone, rating, reviews, website and more.",
+  "version": "1.0",
+  "buildTag": "latest",
+  "environmentVariables": {},
+  "dockerfile": "./Dockerfile",
+  "readme": "./README.md",
+  "input": "./input_schema.json",
+  "storages": {
+    "dataset": {
+      "actorSpecification": 1,
+      "title": "Scraped Places",
+      "views": {
+        "overview": {
+          "title": "Overview",
+          "transformation": {
+            "fields": [
+              "name",
+              "rating",
+              "reviewCount",
+              "address",
+              "phone",
+              "website",
+              "searchTerm",
+              "location"
+            ]
+          },
+          "display": {
+            "component": "table",
+            "properties": {
+              "name": { "label": "Name", "format": "text" },
+              "rating": { "label": "Rating", "format": "number" },
+              "reviewCount": { "label": "Reviews", "format": "number" },
+              "address": { "label": "Address", "format": "text" },
+              "phone": { "label": "Phone", "format": "text" },
+              "website": { "label": "Website", "format": "link" },
+              "searchTerm": { "label": "Search Term", "format": "text" },
+              "location": { "label": "Location", "format": "text" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
