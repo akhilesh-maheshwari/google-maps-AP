@@ -20,12 +20,14 @@
     "maxPlaces": {
       "title": "Number of places to extract (per search term)",
       "type": "integer",
+      "description": "Maximum number of places to scrape for each search term",
       "editor": "number",
       "default": 150
     },
     "language": {
       "title": "Language",
       "type": "string",
+      "description": "Select the language for Google Maps results",
       "editor": "select",
       "default": "en",
       "enum": ["en", "es", "fr", "de"],
