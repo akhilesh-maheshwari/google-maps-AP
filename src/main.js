@@ -74,7 +74,7 @@ try {
   // ──────────────────────────────
   // 4. CALCULATE COST
   // ──────────────────────────────
-  const PRICE_PER_PLACE = 0.005;
+  const PRICE_PER_PLACE = 0.01;
   const totalPlaces     = rowCount * maxPlaces;
   const creditsCost     = parseFloat((totalPlaces * PRICE_PER_PLACE).toFixed(3));
 
