@@ -19,26 +19,32 @@
           "transformation": {
             "fields": [
               "name",
-              "rating",
-              "reviewCount",
-              "address",
+              "category",
+              "email",
+              "maps_url",
               "phone",
+              "place_id",
+              "price",
+              "rating",
+              "review_count",
               "website",
-              "searchTerm",
-              "location"
+              "address"
             ]
           },
           "display": {
             "component": "table",
             "properties": {
-              "name": { "label": "Name", "format": "text" },
-              "rating": { "label": "Rating", "format": "number" },
-              "reviewCount": { "label": "Reviews", "format": "number" },
-              "address": { "label": "Address", "format": "text" },
-              "phone": { "label": "Phone", "format": "text" },
-              "website": { "label": "Website", "format": "link" },
-              "searchTerm": { "label": "Search Term", "format": "text" },
-              "location": { "label": "Location", "format": "text" }
+              "name":         { "label": "Name",         "format": "text"   },
+              "category":     { "label": "Category",     "format": "text"   },
+              "email":        { "label": "Email",        "format": "text"   },
+              "maps_url":     { "label": "Maps URL",     "format": "link"   },
+              "phone":        { "label": "Phone",        "format": "text"   },
+              "place_id":     { "label": "Place ID",     "format": "text"   },
+              "price":        { "label": "Price",        "format": "number" },
+              "rating":       { "label": "Rating",       "format": "number" },
+              "review_count": { "label": "Review Count", "format": "number" },
+              "website":      { "label": "Website",      "format": "link"   },
+              "address":      { "label": "Address",      "format": "text"   }
             }
           }
         }
