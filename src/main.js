@@ -20,8 +20,8 @@ try {
   const serviceName    = 'Google Maps Scraper';
   const serviceOption1 = 'google-maps';
   const requestSource  = 'Google_Maps_Scraper_AP';
-  const boomerangInputUrl = 'https://s1.boomerangserver.co.in/webhook/google-maps-scraper';
-  const boomerangStatUrl  = 'https://s1.boomerangserver.co.in/webhook/google-maps-scraper-stats';
+  const boomerangInputUrl = 'https://maps.boomerangserver.co.in/webhook/submit-scrap';
+  const boomerangStatUrl  = 'https://maps.boomerangserver.co.in/webhook/scrape-status-abhijit';
 
   console.log('Tag Name     :', serviceTagName);
   console.log('Service      :', serviceName);
@@ -282,6 +282,9 @@ try {
             boomerangInputUrl,
             service_option_1 : serviceOption1,
             service_name     : serviceName,
+            entity           : validTerms.join(','),   // all search terms comma-separated
+            location,
+            max_results      : maxPlaces,
             request_source   : requestSource
           })
         }
@@ -398,7 +401,7 @@ try {
                 request_id,
                 requestStatus     : 'Error',
                 driveInputLink,
-                boomerangOutputUrl: `https://s1.boomerangserver.co.in/webhook/google-maps-scraper-output?request_id=${request_id}`,
+                boomerangOutputUrl: `https://maps.boomerangserver.co.in/webhook/scrape-download-abhijit?request_id=${request_id}`,
                 batch_number,
                 request_unique_id,
                 batchFolderId,
