@@ -3,6 +3,13 @@
   "type": "object",
   "schemaVersion": 1,
   "properties": {
+    "fileName": {
+      "title": "File Name",
+      "type": "string",
+      "description": "Name for the output file",
+      "editor": "textfield",
+      "prefill": "output"
+    },
     "searchTerms": {
       "title": "Search term(s)",
       "type": "array",
@@ -23,15 +30,6 @@
       "description": "Maximum number of places to scrape for each search term",
       "editor": "number",
       "prefill": 150
-    },
-    "language": {
-      "title": "Language",
-      "type": "string",
-      "description": "Select the language for Google Maps results",
-      "editor": "select",
-      "default": "en",
-      "enum": ["en", "es", "fr", "de"],
-      "enumTitles": ["English", "Spanish", "French", "German"]
     }
   },
   "required": ["searchTerms", "location"]
