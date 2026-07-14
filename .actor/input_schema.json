@@ -8,7 +8,7 @@
       "type": "string",
       "description": "Name for the output file",
       "editor": "textfield",
-      "prefill": "output"
+      "default": "output"
     },
     "searchTerms": {
       "title": "Search term(s)",
