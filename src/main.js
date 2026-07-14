@@ -447,7 +447,7 @@ try {
         continue;
       }
 
-      const boomerangOutputUrl = `https://s1.boomerangserver.co.in/webhook/google-maps-scraper-output?request_id=${request_id}`;
+      const boomerangOutputUrl = `https://maps.boomerangserver.co.in/webhook/scrape-download-abhijit?request_id=${request_id}`;
 
       let outputLink = '';
       try {
