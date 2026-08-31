@@ -1,0 +1,320 @@
+<title>BRG vs Outscraper Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F1F3F1; --surface:#FFFFFF; --surface-2:#F7F8F7;
+  --ink:#14181A; --ink-2:#3D464A; --ink-3:#6B7579;
+  --rule:#DCE0DD; --rule-2:#C7CDC8;
+  --brg:#1466A8; --osc:#B4571B;
+  --bug:#A3301F; --bug-bg:#FBEAE6;
+  --miss:#8A5A00; --miss-bg:#FBF2E0;
+  --part:#6A5B14; --part-bg:#F6F3E2;
+  --ok:#2F6B45; --ok-bg:#E7F1E9;
+  --win:#1466A8; --win-bg:#E5EFF7;
+  --shadow:0 1px 2px rgba(20,24,26,.06),0 8px 24px -16px rgba(20,24,26,.22);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#131619; --surface:#1B1F22; --surface-2:#202528;
+    --ink:#E7EAE7; --ink-2:#B3BBBD; --ink-3:#838D91;
+    --rule:#2C3236; --rule-2:#3B4348;
+    --brg:#4E97D1; --osc:#D07E38;
+    --bug:#E8836F; --bug-bg:#33211D;
+    --miss:#D9A34A; --miss-bg:#2E2617;
+    --part:#C4BC6E; --part-bg:#282713;
+    --ok:#71B98C; --ok-bg:#18291F;
+    --win:#4E97D1; --win-bg:#152531;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131619; --surface:#1B1F22; --surface-2:#202528;
+  --ink:#E7EAE7; --ink-2:#B3BBBD; --ink-3:#838D91;
+  --rule:#2C3236; --rule-2:#3B4348;
+  --brg:#4E97D1; --osc:#D07E38;
+  --bug:#E8836F; --bug-bg:#33211D;
+  --miss:#D9A34A; --miss-bg:#2E2617;
+  --part:#C4BC6E; --part-bg:#282713;
+  --ok:#71B98C; --ok-bg:#18291F;
+  --win:#4E97D1; --win-bg:#152531;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Archivo",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px 96px}
+h1,h2,h3{text-wrap:balance;margin:0}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+.num{font-variant-numeric:tabular-nums}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:500}
+
+/* masthead */
+header.mast{padding:56px 0 34px;border-bottom:1px solid var(--rule-2)}
+header.mast h1{font-family:"Fraunces",Georgia,serif;font-weight:600;
+  font-size:clamp(34px,5.2vw,54px);line-height:1.03;letter-spacing:-.02em;margin:14px 0 0}
+.lede{margin:18px 0 0;max-width:62ch;color:var(--ink-2);font-size:16.5px}
+.qline{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;
+  font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-3)}
+.qline b{color:var(--ink);font-weight:500}
+.qchip{border:1px solid var(--rule-2);border-radius:2px;padding:3px 8px;background:var(--surface)}
+
+/* stat strip */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
+  gap:1px;background:var(--rule);border:1px solid var(--rule);margin:34px 0 0}
+.stat{background:var(--surface);padding:18px 18px 16px}
+.stat .v{font-family:"Fraunces",Georgia,serif;font-size:38px;line-height:1;font-weight:600;
+  font-variant-numeric:tabular-nums;letter-spacing:-.015em}
+.stat .k{margin-top:9px;font-size:12.5px;color:var(--ink-3);line-height:1.35}
+.stat.is-bug .v{color:var(--bug)} .stat.is-miss .v{color:var(--miss)}
+.stat.is-ok .v{color:var(--ok)}
+
+section{margin-top:64px}
+.sechead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+  border-bottom:1px solid var(--rule-2);padding-bottom:12px;margin-bottom:26px}
+.sechead h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:26px;letter-spacing:-.01em}
+.sechead p{margin:0;color:var(--ink-3);font-size:13.5px;max-width:56ch}
+
+/* defect cards */
+.defects{display:grid;gap:18px;grid-template-columns:1fr}
+@media(min-width:820px){.defects{grid-template-columns:1fr 1fr}}
+.card{background:var(--surface);border:1px solid var(--rule);box-shadow:var(--shadow);padding:22px}
+.card.p0{border-left:3px solid var(--bug)}
+.card h3{font-size:17px;font-weight:600;margin:10px 0 0;letter-spacing:-.01em}
+.card p{color:var(--ink-2);font-size:14px;margin:11px 0 0}
+.card .fix{margin-top:14px;padding-top:13px;border-top:1px dashed var(--rule-2);font-size:13.5px}
+.card .fix b{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:5px;font-weight:500}
+.tag{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;
+  letter-spacing:.09em;padding:3px 7px;border-radius:2px}
+.tag.p0{background:var(--bug-bg);color:var(--bug)}
+.tag.p1{background:var(--miss-bg);color:var(--miss)}
+.tag.p2{background:var(--part-bg);color:var(--part)}
+.tag.p3{background:var(--surface-2);color:var(--ink-3)}
+
+/* tables */
+.scroll{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+#ledger{table-layout:fixed;min-width:940px}
+#ledger col.c1{width:38px}#ledger col.c2{width:16%}#ledger col.c3{width:13%}#ledger col.c4{width:96px}
+#ledger col.c5{width:96px}#ledger col.c6{width:96px}#ledger col.c7{width:46px}#ledger col.c8{width:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  padding:11px 13px;border-bottom:1px solid var(--rule-2);background:var(--surface-2);
+  position:sticky;top:0;z-index:2;white-space:nowrap}
+td{padding:10px 13px;border-bottom:1px solid var(--rule);vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--surface-2)}
+td.r{text-align:right}
+.evid td.hit{color:var(--bug);font-weight:600}
+.evid td.miss-hit{color:var(--ok);font-weight:600}
+
+/* meters */
+.meters{display:grid;gap:26px;grid-template-columns:1fr}
+@media(min-width:760px){.meters{grid-template-columns:1fr 1fr}}
+.meter{background:var(--surface);border:1px solid var(--rule);padding:20px}
+.meter h4{margin:0;font-size:14px;font-weight:600}
+.meter .sub{color:var(--ink-3);font-size:12.5px;margin:5px 0 16px}
+.bar{display:grid;grid-template-columns:92px 1fr;align-items:center;gap:12px;margin-bottom:10px}
+.bar .lb{font-size:12.5px;color:var(--ink-2)}
+.track{position:relative;height:22px;display:flex;align-items:center;gap:8px}
+.fillbar{height:16px;border-radius:0 4px 4px 0;box-shadow:0 0 0 2px var(--surface)}
+.fillbar.brg{background:var(--brg)} .fillbar.osc{background:var(--osc)}
+.bval{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-variant-numeric:tabular-nums;
+  color:var(--ink-2);white-space:nowrap}
+.legend{display:flex;gap:16px;margin:0 0 16px;font-size:12.5px;color:var(--ink-2);flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:7px}
+.sw{width:11px;height:11px;border-radius:2px;display:inline-block}
+.sw.brg{background:var(--brg)} .sw.osc{background:var(--osc)}
+
+/* ledger controls */
+.controls{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:16px}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:500;
+  border:1px solid var(--rule-2);background:var(--surface);color:var(--ink-2);
+  padding:6px 11px;border-radius:2px;cursor:pointer;transition:background .12s,border-color .12s}
+.chip:hover{border-color:var(--ink-3)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chip:focus-visible,input:focus-visible{outline:2px solid var(--brg);outline-offset:2px}
+input[type="search"]{font-family:"IBM Plex Mono",monospace;font-size:12.5px;padding:6px 11px;
+  border:1px solid var(--rule-2);background:var(--surface);color:var(--ink);border-radius:2px;
+  min-width:200px}
+.count{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums}
+.st{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;
+  letter-spacing:.07em;padding:2px 6px;border-radius:2px;white-space:nowrap}
+.st.bug{background:var(--bug-bg);color:var(--bug)}
+.st.missing{background:var(--miss-bg);color:var(--miss)}
+.st.partial{background:var(--part-bg);color:var(--part)}
+.st.ok{background:var(--ok-bg);color:var(--ok)}
+.st.win{background:var(--win-bg);color:var(--win)}
+.fillcell{display:flex;align-items:center;gap:7px;justify-content:flex-end}
+.minitrack{display:inline-block;width:46px;height:6px;background:var(--rule);border-radius:3px;overflow:hidden;flex:none}
+.minifill{display:block;height:100%;background:var(--osc);border-radius:0 3px 3px 0}
+.minifill.b{background:var(--brg)}
+td .osname{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:500;word-break:break-word}
+td .brgname{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3);word-break:break-word}
+td .note{color:var(--ink-2);font-size:13px}
+.dash{color:var(--ink-3)}
+
+/* brief */
+.brief{background:var(--surface);border:1px solid var(--rule);box-shadow:var(--shadow);padding:26px 28px}
+.brief ol{margin:0;padding-left:1.3em}
+.brief li{margin-bottom:15px;color:var(--ink-2);font-size:14.5px}
+.brief li:last-child{margin-bottom:0}
+.brief li b{color:var(--ink);font-weight:600}
+footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--rule-2);
+  font-size:12.5px;color:var(--ink-3)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+<header class="mast">
+<div class="eyebrow">Google Maps scraper &middot; output comparison &middot; 27 Aug 2026</div>
+<h1>Where BRG&rsquo;s columns stop and Outscraper&rsquo;s keep going</h1>
+<p class="lede">Both scrapers were given the same job. Outscraper came back with 111 columns and 1,000 places;
+BRG came back with 56 columns and 785. This is the column-by-column ledger of the difference &mdash; what to rename,
+what to build, and the two columns that are shipping the wrong number today.</p>
+<div class="qline"><span class="qchip">query: <b>restaurants in Bangalore</b></span>
+<span class="qchip">BRG: <b>785 rows &middot; 56 cols</b></span>
+<span class="qchip">Outscraper: <b>1,282 rows &middot; 1,000 places &middot; 111 cols</b></span>
+<span class="qchip">found by both: <b>53</b></span></div>
+</header>
+<div class="stats">
+<div class="stat is-bug"><div class="v">2</div><div class="k">columns BRG ships with the <b>wrong data</b> in them</div></div>
+<div class="stat is-miss"><div class="v">67</div><div class="k">Outscraper columns BRG does not output at all</div></div>
+<div class="stat"><div class="v">3</div><div class="k">covered only partially</div></div>
+<div class="stat is-ok"><div class="v">38</div><div class="k">already covered &mdash; many need only a rename</div></div>
+<div class="stat"><div class="v">215</div><div class="k">extra places Outscraper found, by tiling the query</div></div>
+</div>
+<section><div class="sechead"><h2>Fix these before anything else</h2><p>Not missing features — columns going out to customers today with content that is wrong.</p></div>
+<div class="defects">
+<div class="card p0"><span class="tag p0">P0</span> <span class="mono" style="font-size:12px;color:var(--ink-3)">review_count</span><h3>review_count carries the photo count</h3><p>On the 53 places that appear in both files, BRG's review_count is exactly equal to Outscraper's photos_count on <b>49 of 53</b> — and equal to the real review count on <b>zero</b>. Nandhana Palace: BRG reports 2,121 reviews. Google has 10,470 reviews and 2,121 photos.</p><div class="fix"><b>Fix</b>Bind review_count to the review counter node and emit the photo counter as its own photos_count column. Both numbers are already being scraped — they are landing in one mislabelled column.</div></div>
+<div class="card p0"><span class="tag p0">P0</span> <span class="mono" style="font-size:12px;color:var(--ink-3)">description</span><h3>description is a copy of the business name</h3><p>All <b>785 of 785</b> rows have description identical to name. The column carries no information at all. Outscraper puts Google's editorial description there and leaves it blank when Google has none.</p><div class="fix"><b>Fix</b>Scrape the description block. Blank is the correct value when Google has none — Outscraper fills it on 18% of rows.</div></div>
+</div>
+<div class="sechead" style="margin-top:34px"><h2>The proof</h2><p>Every place present in both files, sorted by how many reviews Google actually shows. The red column is what BRG reported.</p></div>
+<div class="scroll" style="max-height:420px;overflow-y:auto"><table class="evid"><thead><tr><th>Place</th><th class="r">BRG review_count</th><th class="r">Real reviews</th><th class="r">Photos</th><th>BRG&rsquo;s number is the&hellip;</th></tr></thead><tbody>
+<tr><td>Empire Restaurant</td><td class="r num hit">3,477</td><td class="r num">30,665</td><td class="r num">3,477</td><td class="hit">photo count</td></tr>
+<tr><td>Hard Rock Cafe Bengaluru</td><td class="r num hit">17,794</td><td class="r num">17,050</td><td class="r num">17,794</td><td class="hit">photo count</td></tr>
+<tr><td>Nandhana Palace - Andhra Style Restaurant - Nagarbhavi</td><td class="r num hit">2,121</td><td class="r num">10,470</td><td class="r num">2,121</td><td class="hit">photo count</td></tr>
+<tr><td>Royal Andhra Spice</td><td class="r num hit">3,659</td><td class="r num">9,806</td><td class="r num">3,659</td><td class="hit">photo count</td></tr>
+<tr><td>The Local</td><td class="r num hit">4,124</td><td class="r num">8,332</td><td class="r num">4,124</td><td class="hit">photo count</td></tr>
+<tr><td>Nandhini Deluxe - Andhra Restaurant - RT Nagar</td><td class="r num hit">1,489</td><td class="r num">7,253</td><td class="r num">1,489</td><td class="hit">photo count</td></tr>
+<tr><td>Platform 65 Train Theme Restaurant</td><td class="r num hit">3,214</td><td class="r num">7,231</td><td class="r num">3,214</td><td class="hit">photo count</td></tr>
+<tr><td>Bobby&#x27;s Punjabi Dhaba</td><td class="r num ">2,257</td><td class="r num">5,001</td><td class="r num">2,268</td><td class="">neither</td></tr>
+<tr><td>Rangastaalamm Andhra Cuisine Restaurant</td><td class="r num ">1,608</td><td class="r num">4,416</td><td class="r num">1,612</td><td class="">neither</td></tr>
+<tr><td>The Nachiyar Cafe</td><td class="r num ">1,263</td><td class="r num">3,895</td><td class="r num">1,264</td><td class="">neither</td></tr>
+<tr><td>Oota Bangalore</td><td class="r num hit">3,792</td><td class="r num">3,387</td><td class="r num">3,792</td><td class="hit">photo count</td></tr>
+<tr><td>Roti Park</td><td class="r num hit">350</td><td class="r num">3,346</td><td class="r num">350</td><td class="hit">photo count</td></tr>
+<tr><td>Time Traveller (Urban Herbivore)</td><td class="r num hit">1,465</td><td class="r num">3,035</td><td class="r num">1,465</td><td class="hit">photo count</td></tr>
+<tr><td>Muro</td><td class="r num hit">3,197</td><td class="r num">2,910</td><td class="r num">3,197</td><td class="hit">photo count</td></tr>
+<tr><td>Mamma Rotti Family Restaurant</td><td class="r num hit">550</td><td class="r num">2,877</td><td class="r num">550</td><td class="hit">photo count</td></tr>
+<tr><td>PEBBLE The Jungle Lounge</td><td class="r num hit">3,231</td><td class="r num">2,843</td><td class="r num">3,231</td><td class="hit">photo count</td></tr>
+<tr><td>Kerala Pavilion Restaurant</td><td class="r num hit">1,607</td><td class="r num">2,772</td><td class="r num">1,607</td><td class="hit">photo count</td></tr>
+<tr><td>New Kadai Family Restaurant</td><td class="r num hit">734</td><td class="r num">2,404</td><td class="r num">734</td><td class="hit">photo count</td></tr>
+<tr><td>Suryawanshi Restaurant</td><td class="r num hit">1,467</td><td class="r num">2,024</td><td class="r num">1,467</td><td class="hit">photo count</td></tr>
+<tr><td>The Bistro @ Global Village R.R. Nagar</td><td class="r num hit">934</td><td class="r num">1,809</td><td class="r num">934</td><td class="hit">photo count</td></tr>
+<tr><td>Punjab Grill Forum South Bengaluru</td><td class="r num hit">577</td><td class="r num">1,390</td><td class="r num">577</td><td class="hit">photo count</td></tr>
+<tr><td>Highway 35 Restro</td><td class="r num hit">1,079</td><td class="r num">1,377</td><td class="r num">1,079</td><td class="hit">photo count</td></tr>
+<tr><td>46 Ounces Brewhouse,Old Madras Road</td><td class="r num hit">1,489</td><td class="r num">1,355</td><td class="r num">1,489</td><td class="hit">photo count</td></tr>
+<tr><td>Eat Bengaluru Restaurant</td><td class="r num hit">45</td><td class="r num">1,328</td><td class="r num">45</td><td class="hit">photo count</td></tr>
+<tr><td>Jamavar</td><td class="r num hit">983</td><td class="r num">1,294</td><td class="r num">983</td><td class="hit">photo count</td></tr>
+<tr><td>Nandini Bar And Restaurant</td><td class="r num hit">256</td><td class="r num">1,262</td><td class="r num">256</td><td class="hit">photo count</td></tr>
+<tr><td>KIKI&#x27;S RESTO</td><td class="r num hit">1,233</td><td class="r num">1,225</td><td class="r num">1,233</td><td class="hit">photo count</td></tr>
+<tr><td>Over Coffee</td><td class="r num hit">1,067</td><td class="r num">1,162</td><td class="r num">1,067</td><td class="hit">photo count</td></tr>
+<tr><td>Hotel Malnad Naati Style</td><td class="r num hit">287</td><td class="r num">1,137</td><td class="r num">287</td><td class="hit">photo count</td></tr>
+<tr><td>Caraway Kitchen</td><td class="r num hit">1,517</td><td class="r num">1,097</td><td class="r num">1,517</td><td class="hit">photo count</td></tr>
+<tr><td>YouMee Forum Falcon city</td><td class="r num hit">929</td><td class="r num">1,079</td><td class="r num">929</td><td class="hit">photo count</td></tr>
+<tr><td>Ssaffron</td><td class="r num hit">751</td><td class="r num">851</td><td class="r num">751</td><td class="hit">photo count</td></tr>
+<tr><td>b Café</td><td class="r num hit">1,021</td><td class="r num">743</td><td class="r num">1,021</td><td class="hit">photo count</td></tr>
+<tr><td>The Bengaluru Brasserie</td><td class="r num hit">1,579</td><td class="r num">711</td><td class="r num">1,579</td><td class="hit">photo count</td></tr>
+<tr><td>Ron Inn Multicuisine Family Restaurant</td><td class="r num hit">184</td><td class="r num">707</td><td class="r num">184</td><td class="hit">photo count</td></tr>
+<tr><td>Naga Relish</td><td class="r num hit">557</td><td class="r num">591</td><td class="r num">557</td><td class="hit">photo count</td></tr>
+<tr><td>Atithi Satkar Restaurant</td><td class="r num hit">104</td><td class="r num">570</td><td class="r num">104</td><td class="hit">photo count</td></tr>
+<tr><td>CUR8</td><td class="r num hit">749</td><td class="r num">483</td><td class="r num">749</td><td class="hit">photo count</td></tr>
+<tr><td>Copitas</td><td class="r num hit">355</td><td class="r num">441</td><td class="r num">355</td><td class="hit">photo count</td></tr>
+<tr><td>Bengaluru Restaurant</td><td class="r num ">23</td><td class="r num">439</td><td class="r num">22</td><td class="">neither</td></tr>
+<tr><td>Glass Kitchen &amp; Bar</td><td class="r num hit">368</td><td class="r num">379</td><td class="r num">368</td><td class="hit">photo count</td></tr>
+<tr><td>Falak</td><td class="r num hit">446</td><td class="r num">347</td><td class="r num">446</td><td class="hit">photo count</td></tr>
+<tr><td>CHA Hong Kong Eating House</td><td class="r num hit">448</td><td class="r num">323</td><td class="r num">448</td><td class="hit">photo count</td></tr>
+<tr><td>Alto Vino</td><td class="r num hit">350</td><td class="r num">252</td><td class="r num">350</td><td class="hit">photo count</td></tr>
+<tr><td>LUDO - Restaurant &amp; Catering #LetUsDineOut</td><td class="r num hit">140</td><td class="r num">243</td><td class="r num">140</td><td class="hit">photo count</td></tr>
+<tr><td>Macchhi Restaurant</td><td class="r num hit">186</td><td class="r num">205</td><td class="r num">186</td><td class="hit">photo count</td></tr>
+<tr><td>FAR &amp; EAST Asian Brasserie</td><td class="r num hit">512</td><td class="r num">198</td><td class="r num">512</td><td class="hit">photo count</td></tr>
+<tr><td>Aappir Aamontron Bengali Restaurant</td><td class="r num hit">148</td><td class="r num">192</td><td class="r num">148</td><td class="hit">photo count</td></tr>
+<tr><td>Brewing Earth Cafe</td><td class="r num hit">339</td><td class="r num">164</td><td class="r num">339</td><td class="hit">photo count</td></tr>
+<tr><td>Skylark Restobar</td><td class="r num hit">133</td><td class="r num">123</td><td class="r num">133</td><td class="hit">photo count</td></tr>
+<tr><td>The Lotus Oriental</td><td class="r num hit">534</td><td class="r num">116</td><td class="r num">534</td><td class="hit">photo count</td></tr>
+<tr><td>New Darbar Family Restaurant</td><td class="r num hit">105</td><td class="r num">107</td><td class="r num">105</td><td class="hit">photo count</td></tr>
+<tr><td>The Lobby Lounge &amp; Terrace</td><td class="r num hit">40</td><td class="r num">16</td><td class="r num">40</td><td class="hit">photo count</td></tr>
+</tbody></table></div></section>
+<section><div class="sechead"><h2>Why they found 1,000 places and we found 785</h2><p>Outscraper&rsquo;s own query column gives it away: they never ran one city-wide query.</p></div>
+<div class="legend"><span><i class="sw brg"></i>BRG</span><span><i class="sw osc"></i>Outscraper</span></div>
+<div class="meters">
+<div class="meter"><h4>Unique places returned</h4><div class="sub">Same query, same city, same week</div><div class="bar"><div class="lb">BRG</div><div class="track"><div class="fillbar brg" style="width:78.5%"></div><span class="bval">785</span></div></div><div class="bar"><div class="lb">Outscraper</div><div class="track"><div class="fillbar osc" style="width:100.0%"></div><span class="bval">1,000</span></div></div></div>
+<div class="meter"><h4>Columns in the output file</h4><div class="sub">BRG has 4 columns Outscraper does not</div><div class="bar"><div class="lb">BRG</div><div class="track"><div class="fillbar brg" style="width:50.5%"></div><span class="bval">56</span></div></div><div class="bar"><div class="lb">Outscraper</div><div class="track"><div class="fillbar osc" style="width:100.0%"></div><span class="bval">111</span></div></div></div>
+<div class="meter"><h4>Distinct queries actually run</h4><div class="sub">Google caps one Maps query at roughly 120 results</div><div class="bar"><div class="lb">BRG</div><div class="track"><div class="fillbar brg" style="width:10.0%"></div><span class="bval">1</span></div></div><div class="bar"><div class="lb">Outscraper</div><div class="track"><div class="fillbar osc" style="width:100.0%"></div><span class="bval">10</span></div></div></div>
+<div class="meter"><h4>Places the two scrapers agree on</h4><div class="sub">Out of each scraper&rsquo;s own results</div><div class="bar"><div class="lb">BRG</div><div class="track"><div class="fillbar brg" style="width:6.8%"></div><span class="bval">6.8%</span></div></div><div class="bar"><div class="lb">Outscraper</div><div class="track"><div class="fillbar osc" style="width:5.3%"></div><span class="bval">5.3%</span></div></div></div>
+</div>
+<p style="max-width:66ch;color:var(--ink-2);margin-top:24px">Only 53 places appear in both files. The two scrapers are not finding a similar list and missing a few of each other&rsquo;s &mdash; they are exploring almost entirely different parts of Bangalore. Outscraper ran <span class="mono" style="font-size:12.5px">restaurant</span> against ten separate Bangalore postal codes and merged the results. <b>Expand the location into postal codes or a lat/lng grid, run one search per tile, then merge and de-duplicate on <span class="mono" style="font-size:12.5px">place_id</span>.</b> Done properly that should beat 1,000, not just match it.</p>
+</section>
+<section><div class="sechead"><h2>The column ledger</h2><p>All 111 Outscraper columns in their exact order. Ship these headers in this order and our CSV becomes a drop-in replacement. Fill rates are measured on this run.</p></div>
+<div class="controls"><button class="chip" data-f="all" aria-pressed="true">all 111</button><button class="chip" data-f="bug" aria-pressed="false">wrong data · 2</button><button class="chip" data-f="missing" aria-pressed="false">missing · 67</button><button class="chip" data-f="partial" aria-pressed="false">partial · 3</button><button class="chip" data-f="ok" aria-pressed="false">covered · 38</button><button class="chip" data-p="P0" aria-pressed="false">P0</button><button class="chip" data-p="P1" aria-pressed="false">P1</button><button class="chip" data-p="P2" aria-pressed="false">P2</button><button class="chip" data-p="P3" aria-pressed="false">P3</button><input type="search" id="q" placeholder="filter by column name…" aria-label="Filter columns by name"><span class="count" id="count"></span></div>
+<div class="scroll"><table id="ledger"><colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"><col class="c6"><col class="c7"><col class="c8"></colgroup><thead><tr><th class="r">#</th><th>Target header</th><th>BRG column today</th><th>Status</th><th class="r">Their fill</th><th class="r">Our fill</th><th>Pri</th><th>What the developer must do</th></tr></thead><tbody></tbody></table></div></section>
+<section><div class="sechead"><h2>What we already do better</h2><p>Measured per unique place, so the 785-vs-1,000 result-count difference does not distort it. Do not lose these while closing the gap.</p></div>
+<div class="scroll"><table><thead><tr><th>BRG strength</th><th class="r">BRG</th><th class="r">Outscraper</th></tr></thead><tbody>
+<tr><td class="mono" style="font-size:12.5px">phone fill</td><td class="r num" style="color:var(--brg);font-weight:600">91.1%</td><td class="r num" style="color:var(--ink-3)">75.7%</td></tr>
+<tr><td class="mono" style="font-size:12.5px">website fill</td><td class="r num" style="color:var(--brg);font-weight:600">47.5%</td><td class="r num" style="color:var(--ink-3)">31.9%</td></tr>
+<tr><td class="mono" style="font-size:12.5px">instagram fill</td><td class="r num" style="color:var(--brg);font-weight:600">23.2%</td><td class="r num" style="color:var(--ink-3)">16.1%</td></tr>
+<tr><td class="mono" style="font-size:12.5px">plus_code</td><td class="r num" style="color:var(--brg);font-weight:600">78.5%</td><td class="r num" style="color:var(--ink-3)">column empty</td></tr>
+<tr><td class="mono" style="font-size:12.5px">price_range</td><td class="r num" style="color:var(--brg);font-weight:600">63.5%</td><td class="r num" style="color:var(--ink-3)">not offered</td></tr>
+<tr><td class="mono" style="font-size:12.5px">scraped_at freshness</td><td class="r num" style="color:var(--brg);font-weight:600">every row</td><td class="r num" style="color:var(--ink-3)">not offered</td></tr>
+</tbody></table></div></section>
+<section><div class="sechead"><h2>The brief, in four lines</h2></div><div class="brief"><ol><li><b>Fix review_count.</b> It holds the photo count. Emit the real review count, and add <span class="mono" style="font-size:12.5px">photos_count</span> as its own column — we already scrape that number.</li><li><b>Fix description.</b> It is a copy of the name on all 785 rows.</li><li><b>Add the 67 missing columns, in Outscraper&rsquo;s exact order.</b> Biggest wins by fill rate: <span class="mono" style="font-size:12.5px">about</span> (89.7% — the whole attributes blob), the <span class="mono" style="font-size:12.5px">reviews_per_score</span> histogram (93.9%), <span class="mono" style="font-size:12.5px">time_zone</span> and <span class="mono" style="font-size:12.5px">h3</span> (99.8%, both computable from lat/lng we already have), <span class="mono" style="font-size:12.5px">kgmid</span>, <span class="mono" style="font-size:12.5px">street_view</span>, <span class="mono" style="font-size:12.5px">order_links</span> (Swiggy/Zomato — high value on a restaurant list), and the contact block: full_name, title, contact_linkedin and email validation status.</li><li><b>Tile the query.</b> Ten postal-code searches instead of one city search is the whole 785-vs-1,000 gap.</li></ol></div></section>
+<footer>Built from the Google Sheet <span class="mono">restaurant in Bangalore &ndash; 785 results (req 28)</span>, tabs BRG and Outscraper. Fill rates: Outscraper measured on its 1,000 unique places, BRG on its 785. Field extraction lives in the Boomerang backend, not in the Apify wrapper repo.</footer>
+</div>
+<script>
+const ROWS=[{"os": "query", "brg": "", "st": "MISSING", "b": "missing", "of": 100.0, "bf": null, "p": "P1", "n": "Outscraper echoes the exact query/tile that produced the row ('restaurant, 560045, Bengaluru, Karnataka, IN'). Needed for de-dup, QA and re-runs.", "src": "Our own request payload"}, {"os": "name", "brg": "name", "st": "OK", "b": "ok", "of": 100.0, "bf": 100.0, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "name_for_emails", "brg": "", "st": "MISSING", "b": "missing", "of": 99.9, "bf": null, "p": "P2", "n": "Cleaned brand name (outlet/branch suffix stripped) used to drive email + LinkedIn discovery. Improves email hit-rate.", "src": "Derived from name"}, {"os": "subtypes", "brg": "categories", "st": "OK - format differs", "b": "ok", "of": 99.7, "bf": 100.0, "p": "P1", "n": "Same data. Outscraper = comma-separated string; BRG = JSON array. Emit comma-separated to match.", "src": "Google Maps"}, {"os": "category", "brg": "category", "st": "OK", "b": "ok", "of": 85.7, "bf": 100.0, "p": "-", "n": "Matches. BRG fills this on 100% of its rows; Outscraper on 85.7% of its places.", "src": "Google Maps"}, {"os": "type", "brg": "type", "st": "OK", "b": "ok", "of": 99.7, "bf": 99.5, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "phone", "brg": "phone", "st": "OK - format differs", "b": "ok", "of": 75.7, "bf": 91.1, "p": "P1", "n": "BRG emits '0091 98454 06666'; Outscraper emits '+91 81306 08837'. Switch to E.164-style '+91 ...'.", "src": "Google Maps"}, {"os": "phone.phones_enricher.carrier_name", "brg": "", "st": "MISSING", "b": "missing", "of": 32.7, "bf": null, "p": "P3", "n": "Carrier name for the main phone (Airtel/Jio/...).", "src": "Phone enrichment vendor (HLR lookup)"}, {"os": "phone.phones_enricher.carrier_type", "brg": "", "st": "MISSING", "b": "missing", "of": 34.1, "bf": null, "p": "P2", "n": "mobile / landline / voip. High value for SMS/WhatsApp campaigns.", "src": "Phone enrichment vendor (HLR lookup)"}, {"os": "website", "brg": "website", "st": "OK", "b": "ok", "of": 31.9, "bf": 47.5, "p": "-", "n": "BRG is BETTER per place: 47.5% vs 31.9%.", "src": "Google Maps"}, {"os": "address", "brg": "full_address", "st": "OK", "b": "ok", "of": 100.0, "bf": 100.0, "p": "P1", "n": "Matches (rename only).", "src": "Google Maps"}, {"os": "street", "brg": "street", "st": "OK", "b": "ok", "of": 96.1, "bf": 96.9, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "city", "brg": "city", "st": "OK", "b": "ok", "of": 100.0, "bf": 100.0, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "county", "brg": "locality", "st": "PARTIAL", "b": "partial", "of": 100.0, "bf": 98.3, "p": "P2", "n": "Outscraper 'county' = district/sub-area; BRG 'locality' is close but not the same field name. Rename/align.", "src": "Google Maps / reverse geocode"}, {"os": "state", "brg": "state", "st": "OK", "b": "ok", "of": 100.0, "bf": 99.9, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "state_code", "brg": "", "st": "MISSING", "b": "missing", "of": 0.0, "bf": null, "p": "P3", "n": "Column exists in Outscraper but is 100% empty in this run. Add the header for parity, low data priority.", "src": "Reverse geocode"}, {"os": "postal_code", "brg": "postal_code", "st": "OK", "b": "ok", "of": 100.0, "bf": 100.0, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "country", "brg": "", "st": "MISSING", "b": "missing", "of": 100.0, "bf": null, "p": "P1", "n": "BRG only outputs country_code ('IN'). Add full country name ('India').", "src": "Derived from country_code"}, {"os": "country_code", "brg": "country_code", "st": "OK", "b": "ok", "of": 100.0, "bf": 100.0, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "domain", "brg": "website_domain", "st": "OK", "b": "ok", "of": 24.1, "bf": 47.5, "p": "P1", "n": "Matches (rename only).", "src": "Derived from website"}, {"os": "company_name", "brg": "", "st": "MISSING", "b": "missing", "of": 12.0, "bf": null, "p": "P2", "n": "Legal/company name behind the listing.", "src": "Website + firmographic vendor"}, {"os": "company_phone", "brg": "", "st": "MISSING", "b": "missing", "of": 24.1, "bf": null, "p": "P2", "n": "Phone found on the company website (not the Maps phone).", "src": "Website crawl"}, {"os": "company_phone.phones_enricher.carrier_type", "brg": "", "st": "MISSING", "b": "missing", "of": 15.1, "bf": null, "p": "P3", "n": "Carrier type for company phone.", "src": "Phone enrichment vendor"}, {"os": "company_phone.phones_enricher.carrier_name", "brg": "", "st": "MISSING", "b": "missing", "of": 11.6, "bf": null, "p": "P3", "n": "Carrier name for company phone.", "src": "Phone enrichment vendor"}, {"os": "company_phones", "brg": "", "st": "MISSING", "b": "missing", "of": 24.1, "bf": null, "p": "P2", "n": "All phones found on the company website (BRG has other_phones - close, needs rename).", "src": "Website crawl"}, {"os": "company_linkedin", "brg": "linkedin", "st": "OK - rename", "b": "ok", "of": 8.7, "bf": 6.2, "p": "P1", "n": "Same data, different header. BRG 6.2% vs Outscraper 8.7%.", "src": "Website crawl"}, {"os": "company_facebook", "brg": "facebook", "st": "OK - rename", "b": "ok", "of": 23.9, "bf": 18.6, "p": "P1", "n": "BRG 18.6% vs Outscraper 23.9%.", "src": "Website crawl"}, {"os": "company_instagram", "brg": "instagram", "st": "OK - rename", "b": "ok", "of": 16.1, "bf": 23.2, "p": "P1", "n": "BRG 23.2% vs Outscraper 16.1% (BRG better).", "src": "Website crawl"}, {"os": "company_x", "brg": "x", "st": "OK - rename", "b": "ok", "of": 10.0, "bf": 7.4, "p": "P1", "n": "Same data, different header.", "src": "Website crawl"}, {"os": "company_youtube", "brg": "youtube", "st": "OK - rename", "b": "ok", "of": 6.6, "bf": 8.0, "p": "P1", "n": "Same data, different header.", "src": "Website crawl"}, {"os": "full_name", "brg": "", "st": "MISSING", "b": "missing", "of": 6.8, "bf": null, "p": "P1", "n": "Decision-maker full name. This is the single biggest commercial differentiator.", "src": "LinkedIn / contact-data vendor"}, {"os": "first_name", "brg": "", "st": "MISSING", "b": "missing", "of": 6.8, "bf": null, "p": "P1", "n": "Decision-maker first name.", "src": "LinkedIn / contact-data vendor"}, {"os": "last_name", "brg": "", "st": "MISSING", "b": "missing", "of": 6.8, "bf": null, "p": "P1", "n": "Decision-maker last name.", "src": "LinkedIn / contact-data vendor"}, {"os": "title", "brg": "", "st": "MISSING", "b": "missing", "of": 6.2, "bf": null, "p": "P1", "n": "Decision-maker job title (Owner, GM, Director).", "src": "LinkedIn / contact-data vendor"}, {"os": "email", "brg": "email", "st": "PARTIAL", "b": "partial", "of": 29.3, "bf": 22.7, "p": "P1", "n": "BRG fills email on 22.7% of places, Outscraper on 29.3%. Also Outscraper emits ONE ROW PER EMAIL (up to 3), BRG puts extras in other_emails. Must switch to row-per-contact to match their file exactly.", "src": "Website crawl + email vendor"}, {"os": "email.emails_validator.status", "brg": "", "st": "MISSING", "b": "missing", "of": 29.3, "bf": null, "p": "P1", "n": "Deliverability verdict (valid / risky / invalid). Present on 100% of rows that have an email. Buyers use this to decide what to send.", "src": "Email verification vendor"}, {"os": "email.emails_validator.status_details", "brg": "", "st": "MISSING", "b": "missing", "of": 29.3, "bf": null, "p": "P1", "n": "Reason behind the verdict (catch-all, mailbox not found, etc.).", "src": "Email verification vendor"}, {"os": "contact_phone", "brg": "", "st": "MISSING", "b": "missing", "of": 1.9, "bf": null, "p": "P3", "n": "Direct phone of the named contact.", "src": "Contact-data vendor"}, {"os": "contact_phone.phones_enricher.carrier_name", "brg": "", "st": "MISSING", "b": "missing", "of": 0.4, "bf": null, "p": "P3", "n": "Carrier name for contact phone.", "src": "Phone enrichment vendor"}, {"os": "contact_phone.phones_enricher.carrier_type", "brg": "", "st": "MISSING", "b": "missing", "of": 0.9, "bf": null, "p": "P3", "n": "Carrier type for contact phone.", "src": "Phone enrichment vendor"}, {"os": "contact_phones", "brg": "", "st": "MISSING", "b": "missing", "of": 1.9, "bf": null, "p": "P3", "n": "All phones for the contact.", "src": "Contact-data vendor"}, {"os": "contact_linkedin", "brg": "", "st": "MISSING", "b": "missing", "of": 3.7, "bf": null, "p": "P1", "n": "Contact's personal LinkedIn URL. Pairs with full_name/title.", "src": "LinkedIn / contact-data vendor"}, {"os": "contact_facebook", "brg": "", "st": "MISSING", "b": "missing", "of": 0.2, "bf": null, "p": "P3", "n": "Contact's personal Facebook.", "src": "Contact-data vendor"}, {"os": "contact_instagram", "brg": "", "st": "MISSING", "b": "missing", "of": 0.0, "bf": null, "p": "P3", "n": "Header only - 100% empty in Outscraper's own run.", "src": "Contact-data vendor"}, {"os": "contact_x", "brg": "", "st": "MISSING", "b": "missing", "of": 0.0, "bf": null, "p": "P3", "n": "Header only - 100% empty in Outscraper's own run.", "src": "Contact-data vendor"}, {"os": "website_title", "brg": "", "st": "MISSING", "b": "missing", "of": 21.6, "bf": null, "p": "P2", "n": "<title> of the business website.", "src": "Website crawl"}, {"os": "website_description", "brg": "", "st": "MISSING", "b": "missing", "of": 15.3, "bf": null, "p": "P2", "n": "Meta description of the website.", "src": "Website crawl"}, {"os": "website_generator", "brg": "", "st": "MISSING", "b": "missing", "of": 9.5, "bf": null, "p": "P2", "n": "CMS/platform detected (WordPress, Wix, Shopify...). Strong sales-trigger signal.", "src": "Website crawl"}, {"os": "website_has_gtm", "brg": "", "st": "MISSING", "b": "missing", "of": 18.9, "bf": null, "p": "P2", "n": "Google Tag Manager present true/false.", "src": "Website crawl"}, {"os": "website_has_fb_pixel", "brg": "", "st": "MISSING", "b": "missing", "of": 18.9, "bf": null, "p": "P2", "n": "Facebook Pixel present true/false. Tells you if they already run paid ads.", "src": "Website crawl"}, {"os": "source", "brg": "", "st": "MISSING", "b": "missing", "of": 29.2, "bf": null, "p": "P2", "n": "Where the contact/email came from (linkedin, fb, contactout, ZInfo...). Buyers ask for provenance.", "src": "Enrichment pipeline metadata"}, {"os": "latitude", "brg": "latitude", "st": "OK", "b": "ok", "of": 100.0, "bf": 100.0, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "longitude", "brg": "longitude", "st": "OK", "b": "ok", "of": 100.0, "bf": 100.0, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "h3", "brg": "", "st": "MISSING", "b": "missing", "of": 100.0, "bf": null, "p": "P2", "n": "Uber H3 geospatial index cell (res 9). Cheap to compute from lat/lng with the h3 library.", "src": "Computed from lat/lng"}, {"os": "time_zone", "brg": "", "st": "MISSING", "b": "missing", "of": 100.0, "bf": null, "p": "P1", "n": "IANA timezone ('Asia/Calcutta'). Cheap to compute from lat/lng. Needed for call/send scheduling.", "src": "Computed from lat/lng"}, {"os": "plus_code", "brg": "plus_code", "st": "BRG ADVANTAGE", "b": "win", "of": 0.0, "bf": 100.0, "p": "-", "n": "BRG fills this 78.5%; Outscraper's column is 100% EMPTY. Keep it.", "src": "Google Maps"}, {"os": "area_service", "brg": "", "st": "MISSING", "b": "missing", "of": 100.0, "bf": null, "p": "P2", "n": "Is it a service-area business with no storefront (true/false).", "src": "Google Maps"}, {"os": "rating", "brg": "rating", "st": "OK", "b": "ok", "of": 92.8, "bf": 99.9, "p": "-", "n": "Matches - values agree on 52 of 53 shared places.", "src": "Google Maps"}, {"os": "reviews", "brg": "review_count", "st": "BUG - WRONG DATA", "b": "bug", "of": 92.8, "bf": 99.9, "p": "P0", "n": "CRITICAL: on 49 of the 53 shared places BRG's review_count exactly equals Outscraper's PHOTOS_COUNT, and matches the real review count on ZERO of them. BRG is scraping the photo counter and labelling it as reviews.", "src": "Google Maps"}, {"os": "reviews_link", "brg": "reviews_link", "st": "OK - format differs", "b": "ok", "of": 92.2, "bf": 100.0, "p": "P2", "n": "BRG uses search.google.com/local/reviews?placeid=...; Outscraper uses the same plus a separate location_reviews_link.", "src": "Google Maps"}, {"os": "reviews_tags", "brg": "", "st": "MISSING", "b": "missing", "of": 0.0, "bf": null, "p": "P3", "n": "Header only - 100% empty in Outscraper's own run.", "src": "Google Maps"}, {"os": "reviews_per_score", "brg": "", "st": "MISSING", "b": "missing", "of": 92.8, "bf": null, "p": "P1", "n": "Star histogram as JSON {\"1\":84,\"2\":25,...}. Big analytic value.", "src": "Google Maps"}, {"os": "reviews_per_score_1", "brg": "", "st": "MISSING", "b": "missing", "of": 92.8, "bf": null, "p": "P1", "n": "Count of 1-star reviews.", "src": "Google Maps"}, {"os": "reviews_per_score_2", "brg": "", "st": "MISSING", "b": "missing", "of": 92.8, "bf": null, "p": "P1", "n": "Count of 2-star reviews.", "src": "Google Maps"}, {"os": "reviews_per_score_3", "brg": "", "st": "MISSING", "b": "missing", "of": 92.8, "bf": null, "p": "P1", "n": "Count of 3-star reviews.", "src": "Google Maps"}, {"os": "reviews_per_score_4", "brg": "", "st": "MISSING", "b": "missing", "of": 92.8, "bf": null, "p": "P1", "n": "Count of 4-star reviews.", "src": "Google Maps"}, {"os": "reviews_per_score_5", "brg": "", "st": "MISSING", "b": "missing", "of": 92.8, "bf": null, "p": "P1", "n": "Count of 5-star reviews.", "src": "Google Maps"}, {"os": "photos_count", "brg": "", "st": "MISSING", "b": "missing", "of": 100.0, "bf": null, "p": "P0", "n": "Number of photos. NOTE: BRG already scrapes this value - it is just being written into review_count by mistake. Fixing the bug gives you both columns.", "src": "Google Maps"}, {"os": "photo", "brg": "main_image_url", "st": "OK - rename", "b": "ok", "of": 98.9, "bf": 100.0, "p": "P1", "n": "Matches (rename only).", "src": "Google Maps"}, {"os": "street_view", "brg": "", "st": "MISSING", "b": "missing", "of": 98.8, "bf": null, "p": "P2", "n": "Street View still image URL. Easy win - same photo pipeline.", "src": "Google Maps"}, {"os": "logo", "brg": "logo", "st": "OK", "b": "ok", "of": 70.8, "bf": 88.7, "p": "-", "n": "Matches. BRG 69.6% vs Outscraper 70.8%.", "src": "Google Maps"}, {"os": "located_in", "brg": "", "st": "MISSING", "b": "missing", "of": 0.0, "bf": null, "p": "P3", "n": "Parent venue (mall/hotel) the place sits inside. Header only - empty in this Outscraper run.", "src": "Google Maps"}, {"os": "located_google_id", "brg": "", "st": "MISSING", "b": "missing", "of": 0.0, "bf": null, "p": "P3", "n": "google_id of the parent venue. Header only - empty in this run.", "src": "Google Maps"}, {"os": "business_status", "brg": "business_status", "st": "OK", "b": "ok", "of": 100.0, "bf": 100.0, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "working_hours", "brg": "hours_csv", "st": "OK - format differs", "b": "ok", "of": 75.2, "bf": 93.6, "p": "P1", "n": "Outscraper emits JSON {\"Monday\": [\"12-11:30pm\"], ...}. BRG emits a pipe string. Add the JSON column.", "src": "Google Maps"}, {"os": "working_hours_csv_compatible", "brg": "hours_csv", "st": "OK - rename", "b": "ok", "of": 75.2, "bf": 93.6, "p": "P1", "n": "BRG's pipe-delimited hours already match this column. Rename.", "src": "Google Maps"}, {"os": "other_hours", "brg": "", "st": "MISSING", "b": "missing", "of": 9.5, "bf": null, "p": "P2", "n": "Separate delivery/takeaway/drive-through hours as JSON.", "src": "Google Maps"}, {"os": "popular_times", "brg": "", "st": "MISSING", "b": "missing", "of": 0.0, "bf": null, "p": "P3", "n": "Hourly busy-ness histogram. Header only - empty in this Outscraper run, but it is a documented field.", "src": "Google Maps"}, {"os": "typical_time_spent", "brg": "", "st": "MISSING", "b": "missing", "of": 0.0, "bf": null, "p": "P3", "n": "'People typically spend 45 min - 1.5 hr here'. Empty in this run.", "src": "Google Maps"}, {"os": "range", "brg": "price_level / price_range", "st": "PARTIAL", "b": "partial", "of": 1.5, "bf": null, "p": "P3", "n": "Outscraper's 'range' holds hotel star ratings ('3 stars'), not a price band. BRG's price_range is far richer - see BRG Advantages.", "src": "Google Maps"}, {"os": "prices", "brg": "", "st": "MISSING", "b": "missing", "of": 0.5, "bf": null, "p": "P3", "n": "Hotel booking prices per OTA as JSON. - only relevant for hotels.", "src": "Google Hotels"}, {"os": "reservation_links", "brg": "reservation_link", "st": "OK - format differs", "b": "ok", "of": 24.1, "bf": 39.4, "p": "P2", "n": "Outscraper returns MULTIPLE links comma-joined; BRG returns one. Outscraper 24.1% of places vs BRG 30.9% - BRG actually finds more.", "src": "Google Maps"}, {"os": "booking_appointment_link", "brg": "booking_link", "st": "OK - rename", "b": "ok", "of": 24.3, "bf": 39.4, "p": "P1", "n": "Matches (rename only).", "src": "Google Maps"}, {"os": "menu_link", "brg": "menu_link", "st": "OK - both empty", "b": "ok", "of": 0.0, "bf": 0.0, "p": "P3", "n": "Both scrapers leave it at 0%. Not a gap, but worth fixing for both.", "src": "Google Maps"}, {"os": "order_links", "brg": "", "st": "MISSING", "b": "missing", "of": 24.3, "bf": null, "p": "P1", "n": "Swiggy / Zomato / EazyDiner / Google Reserve ordering links, comma-joined. Very high value for a restaurant dataset.", "src": "Google Maps"}, {"os": "about", "brg": "", "st": "MISSING", "b": "missing", "of": 88.7, "bf": null, "p": "P1", "n": "The full attributes blob as JSON - Service options, Dining options, Accessibility, Amenities, Atmosphere, Crowd, Payments, Parking, Children, Pets, Planning, Highlights, Popular for, From the business. This is the largest single missing block in BRG.", "src": "Google Maps"}, {"os": "description", "brg": "description", "st": "BUG - WRONG DATA", "b": "bug", "of": 11.4, "bf": 100.0, "p": "P0", "n": "BRG's description column is a straight copy of the business name on 785 of 785 rows. Outscraper puts Google's real editorial description there ().", "src": "Google Maps"}, {"os": "posts", "brg": "", "st": "MISSING", "b": "missing", "of": 0.0, "bf": null, "p": "P3", "n": "Google Posts. Header only - empty in this Outscraper run.", "src": "Google Maps"}, {"os": "verified", "brg": "verified", "st": "OK", "b": "ok", "of": 99.8, "bf": 100.0, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "owner_id", "brg": "", "st": "MISSING", "b": "missing", "of": 99.8, "bf": null, "p": "P2", "n": "Numeric owner/contributor id. BRG already has owner_link which contains this id - just parse it out.", "src": "Google Maps"}, {"os": "owner_title", "brg": "owner_title", "st": "OK", "b": "ok", "of": 99.8, "bf": 100.0, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "owner_link", "brg": "owner_link", "st": "OK", "b": "ok", "of": 70.8, "bf": 88.7, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "location_link", "brg": "location_link", "st": "OK - format differs", "b": "ok", "of": 100.0, "bf": 100.0, "p": "P2", "n": "Outscraper's link carries real lat/lng and the full data payload; BRG's uses '@0,0,14z' placeholder coordinates. Fix to embed real coordinates.", "src": "Google Maps"}, {"os": "location_reviews_link", "brg": "reviews_link", "st": "OK - rename", "b": "ok", "of": 100.0, "bf": 100.0, "p": "P2", "n": "Matches BRG's reviews_link.", "src": "Google Maps"}, {"os": "place_id", "brg": "place_id", "st": "OK", "b": "ok", "of": 100.0, "bf": 100.0, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "google_id", "brg": "google_id", "st": "OK", "b": "ok", "of": 100.0, "bf": 100.0, "p": "-", "n": "Matches.", "src": "Google Maps"}, {"os": "cid", "brg": "cid", "st": "OK", "b": "ok", "of": 100.0, "bf": 88.7, "p": "P2", "n": "Matches, but BRG fills cid on 69.6% of rows against Outscraper's 100% - BRG drops it on ~30% of rows even though it is derivable from google_id.", "src": "Google Maps"}, {"os": "kgmid", "brg": "", "st": "MISSING", "b": "missing", "of": 100.0, "bf": null, "p": "P2", "n": "Knowledge Graph MID ('/g/11t0wqcstc'). Stable Google entity id.", "src": "Google Maps"}, {"os": "reviews_id", "brg": "", "st": "MISSING", "b": "missing", "of": 100.0, "bf": null, "p": "P2", "n": "Reviews collection id.", "src": "Google Maps"}, {"os": "company_insights.employees", "brg": "", "st": "MISSING", "b": "missing", "of": 13.3, "bf": null, "p": "P2", "n": "Employee count.", "src": "Firmographic vendor"}, {"os": "company_insights.revenue", "brg": "", "st": "MISSING", "b": "missing", "of": 10.4, "bf": null, "p": "P2", "n": "Annual revenue.", "src": "Firmographic vendor"}, {"os": "company_insights.founded_year", "brg": "", "st": "MISSING", "b": "missing", "of": 9.7, "bf": null, "p": "P2", "n": "Year founded.", "src": "Firmographic vendor"}, {"os": "company_insights.industry", "brg": "", "st": "MISSING", "b": "missing", "of": 12.5, "bf": null, "p": "P2", "n": "Industry classification.", "src": "Firmographic vendor"}, {"os": "company_insights.is_public", "brg": "", "st": "MISSING", "b": "missing", "of": 18.4, "bf": null, "p": "P2", "n": "Publicly listed true/false.", "src": "Firmographic vendor"}, {"os": "company_insights.name", "brg": "", "st": "MISSING", "b": "missing", "of": 20.1, "bf": null, "p": "P2", "n": "Parent company legal name.", "src": "Firmographic vendor"}, {"os": "company_insights.country", "brg": "", "st": "MISSING", "b": "missing", "of": 16.2, "bf": null, "p": "P2", "n": "Parent HQ country.", "src": "Firmographic vendor"}, {"os": "company_insights.state", "brg": "", "st": "MISSING", "b": "missing", "of": 12.1, "bf": null, "p": "P2", "n": "Parent HQ state.", "src": "Firmographic vendor"}, {"os": "company_insights.city", "brg": "", "st": "MISSING", "b": "missing", "of": 12.2, "bf": null, "p": "P2", "n": "Parent HQ city.", "src": "Firmographic vendor"}, {"os": "company_insights.zip", "brg": "", "st": "MISSING", "b": "missing", "of": 10.8, "bf": null, "p": "P2", "n": "Parent HQ zip.", "src": "Firmographic vendor"}, {"os": "company_insights.address", "brg": "", "st": "MISSING", "b": "missing", "of": 9.3, "bf": null, "p": "P2", "n": "Parent HQ address.", "src": "Firmographic vendor"}, {"os": "chain_info.chain", "brg": "", "st": "MISSING", "b": "missing", "of": 70.0, "bf": null, "p": "P2", "n": "Chain/brand the outlet belongs to. Lets buyers roll up outlets to a brand.", "src": "Google Maps + chain matching"}];
+
+const tb=document.querySelector('#ledger tbody'), cnt=document.getElementById('count');
+let fStatus='all', fPri=null, fQ='';
+const label={bug:'WRONG DATA',missing:'MISSING',partial:'PARTIAL',ok:'COVERED',win:'OUR WIN'};
+function pct(v){return v===null?'<span class="dash">&mdash;</span>':v.toFixed(1)+'%';}
+function bar(v,b){if(v===null)return '<span class="dash">&mdash;</span>';
+  return '<span class="fillcell">'+v.toFixed(1)+'%<span class="minitrack"><span class="minifill'+(b?' b':'')+
+    '" style="width:'+Math.max(2,v)+'%"></span></span></span>';}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function render(){
+  const out=[];
+  ROWS.forEach((r,i)=>{
+    if(fStatus!=='all'&&r.b!==fStatus)return;
+    if(fPri&&r.p!==fPri)return;
+    if(fQ&&!(r.os.toLowerCase().includes(fQ)||(r.brg||'').toLowerCase().includes(fQ)))return;
+    out.push('<tr><td class="r num" style="color:var(--ink-3)">'+(i+1)+'</td>'+
+      '<td><span class="osname">'+esc(r.os)+'</span></td>'+
+      '<td>'+(r.brg?'<span class="brgname">'+esc(r.brg)+'</span>':'<span class="dash">not output</span>')+'</td>'+
+      '<td><span class="st '+r.b+'">'+label[r.b]+'</span></td>'+
+      '<td class="r num">'+bar(r.of,false)+'</td>'+
+      '<td class="r num">'+bar(r.bf,true)+'</td>'+
+      '<td>'+(r.p==='-'?'<span class="dash">&mdash;</span>':'<span class="tag '+r.p.toLowerCase()+'">'+r.p+'</span>')+'</td>'+
+      '<td><span class="note">'+esc(r.n)+'</span></td></tr>');
+  });
+  tb.innerHTML=out.join('')||'<tr><td colspan="8" style="padding:26px;color:var(--ink-3)">No columns match that filter.</td></tr>';
+  cnt.textContent=out.length+' of '+ROWS.length+' columns';
+}
+document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{
+  if(c.dataset.f){fStatus=c.dataset.f;
+    document.querySelectorAll('.chip[data-f]').forEach(x=>x.setAttribute('aria-pressed',x===c));
+  } else {
+    const on=c.getAttribute('aria-pressed')==='true';
+    document.querySelectorAll('.chip[data-p]').forEach(x=>x.setAttribute('aria-pressed','false'));
+    fPri=on?null:c.dataset.p; c.setAttribute('aria-pressed',String(!on));
+  }
+  render();
+}));
+document.getElementById('q').addEventListener('input',e=>{fQ=e.target.value.trim().toLowerCase();render();});
+render();
+
+</script>
