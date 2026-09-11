@@ -8,15 +8,15 @@
       "type": "string",
       "description": "Name for the output file",
       "editor": "textfield",
-      "default": "output"
+      "prefill": "output"
     },
     "searchTerms": {
-  "title": "Search term",
-  "type": "string",
-  "description": "Single search term",
-  "editor": "textfield",
-  "prefill": "hospitals"
-},
+      "title": "Search term",
+      "type": "string",
+      "description": "Single search term (use only one search term per run)",
+      "editor": "textfield",
+      "prefill": "hospitals"
+    },
     "location": {
       "title": "📍 Location (use only one location per run)",
       "type": "string",
@@ -61,7 +61,7 @@
         "Togo", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "Uruguay",
         "Uzbekistan", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
       ],
-      "default": "US"
+      "prefill": "US"
     },
     "maxPlaces": {
       "title": "Number of places to extract (per search term)",
@@ -70,13 +70,13 @@
       "editor": "number",
       "prefill": 150
     },
-    "filter": {
-  "title": "🔍 Filters(use only one filter per run)",
-  "type": "string",
-  "description": "Filter results. E.g. With Phones, With Website, etc.",
-  "editor": "textfield",
-  "default": "With Phones"
-},
+    "filters": {
+      "title": "🔍 Filters (use only one filter per run)",
+      "type": "string",
+      "description": "Filter results. E.g. With Phones, With Website, etc.",
+      "editor": "textfield",
+      "prefill": "With Phones"
+    },
     "language": {
       "title": "Language",
       "type": "string",
@@ -96,7 +96,7 @@
         "Norwegian", "Polish", "Portuguese", "Romanian", "Russian", "Slovak", "Slovenian", "Serbian", "Swedish", "Tamil",
         "Telugu", "Thai", "Turkish", "Ukrainian", "Urdu", "Vietnamese", "Chinese"
       ],
-      "default": "en"
+      "prefill": "en"
     }
   },
   "required": ["searchTerms", "location"]
