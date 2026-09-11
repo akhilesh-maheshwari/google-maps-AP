@@ -11,12 +11,12 @@
       "default": "output"
     },
     "searchTerms": {
-      "title": "Search term(s)",
-      "type": "array",
-      "description": "List of search terms",
-      "editor": "stringList",
-      "prefill": ["hospitals"]
-    },
+  "title": "Search term",
+  "type": "string",
+  "description": "Single search term",
+  "editor": "textfield",
+  "prefill": "hospitals"
+},
     "location": {
       "title": "📍 Location (use only one location per run)",
       "type": "string",
