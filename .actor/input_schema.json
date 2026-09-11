@@ -70,6 +70,15 @@
       "editor": "number",
       "prefill": 150
     },
+    "filters": {
+      "title": "🔍 Filters",
+      "type": "object",
+      "description": "Filter results. Add any key-value pairs. Default: withPhones filters to places with phone numbers only.",
+      "editor": "json",
+      "default": {
+        "withPhones": true
+      }
+    },
     "language": {
       "title": "Language",
       "type": "string",
@@ -90,13 +99,6 @@
         "Telugu", "Thai", "Turkish", "Ukrainian", "Urdu", "Vietnamese", "Chinese"
       ],
       "default": "en"
-    },
-    "withPhones": {
-      "title": "🔍 With Phones Only",
-      "type": "boolean",
-      "description": "Only return places that have a phone number listed",
-      "editor": "checkbox",
-      "default": false
     }
   },
   "required": ["searchTerms", "location"]
