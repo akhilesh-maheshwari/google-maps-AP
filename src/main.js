@@ -202,7 +202,7 @@ try {
           runId,
           time,
           serviceTagName,
-          rowCount,
+          rowCount         : maxPlaces,  // changed from rowCount to maxPlaces
           creditsCost,
           csvContent,
           uploadedFile     : '',
