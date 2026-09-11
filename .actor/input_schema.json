@@ -70,8 +70,8 @@
       "editor": "number",
       "prefill": 150
     },
-    "filters": {
-  "title": "🔍 Filters",
+    "filter": {
+  "title": "🔍 Filters(use only one filter per run)",
   "type": "string",
   "description": "Filter results. E.g. With Phones, With Website, etc.",
   "editor": "textfield",
