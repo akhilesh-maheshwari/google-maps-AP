@@ -13,8 +13,8 @@ try {
   const location       = input.location    || '';
   const country        = input.country     || 'US';
   const maxPlaces      = input.maxPlaces   || 150;
+  const filters        = input.filters     || 'With Phones';
   const language       = input.language    || 'en';
-  const withPhones     = input.withPhones  ?? false;
   const includeReviews = input.includeReviews ?? false;
   const maxReviews     = input.maxReviews  || 10;
   const includeImages  = input.includeImages ?? false;
@@ -22,8 +22,8 @@ try {
   const serviceName    = 'Google Maps Scraper';
   const serviceOption1 = 'google-maps';
   const requestSource  = 'Google_Maps_Scraper_AP';
-  const boomerangInputUrl = 'https://maps.boomerangserver.co.in/webhook/gms-input';
-  const boomerangStatUrl  = 'https://maps.boomerangserver.co.in/webhook/gms-stats';
+  const boomerangInputUrl = 'https://maps.boomerangserver.co.in/webhook/submit-scrap';
+  const boomerangStatUrl  = 'https://maps.boomerangserver.co.in/webhook/scrape-status-abhijit';
 
   console.log('Tag Name     :', serviceTagName);
   console.log('Service      :', serviceName);
@@ -31,8 +31,8 @@ try {
   console.log('Location     :', location);
   console.log('Country      :', country);
   console.log('Max Places   :', maxPlaces);
+  console.log('Filters      :', filters);
   console.log('Language     :', language);
-  console.log('With Phones  :', withPhones);
 
   if (!serviceTagName.trim()) throw new Error('fileName is required!');
   if (!searchTerms.length)    throw new Error('At least one search term is required!');
@@ -215,7 +215,7 @@ try {
           country          : country.toLowerCase(),
           maxPlaces,
           language,
-          filter           : withPhones ? 'With Phones' : '',
+          filter           : filters,
           includeReviews,
           maxReviews       : includeReviews ? maxReviews : 0,
           includeImages
@@ -256,10 +256,10 @@ try {
   // ──────────────────────────────
   // 7. STEP 2 -- PROCESS BATCHES
   // ──────────────────────────────
-  let round          = 0;
-  let allOutputLinks = [];
+  let round           = 0;
+  let allOutputLinks  = [];
   let allBatchResults = [];
-  let totalCharged   = 0;
+  let totalCharged    = 0;
 
   const getNextBatchJobs = async () => {
     try {
@@ -287,7 +287,7 @@ try {
             country          : country.toLowerCase(),
             max_results      : maxPlaces,
             language,
-            filter           : withPhones ? 'With Phones' : '',
+            filter           : filters,
           })
         }
       );
@@ -321,7 +321,7 @@ try {
 
     const batchStatusResults = await Promise.all(
       batchJobs.map(async (job) => {
-        const { request_id, driveInputLink, batch_number, nocodb_id } = job;
+        const { request_id, driveInputLink, batch_number } = job;
         console.log(`  Batch ${batch_number} -- Polling status (request_id: ${request_id})...`);
 
         const maxAttempts  = 10;
@@ -394,7 +394,7 @@ try {
                 request_id,
                 requestStatus     : 'Error',
                 driveInputLink,
-                boomerangOutputUrl: `https://maps.boomerangserver.co.in/webhook/gms-output?request_id=${request_id}`,
+                boomerangOutputUrl: `https://maps.boomerangserver.co.in/webhook/scrape-download-abhijit?request_id=${request_id}`,
                 batch_number,
                 request_unique_id,
                 batchFolderId,
@@ -439,7 +439,7 @@ try {
         continue;
       }
 
-      const boomerangOutputUrl = `https://maps.boomerangserver.co.in/webhook/gms-output?request_id=${request_id}`;
+      const boomerangOutputUrl = `https://maps.boomerangserver.co.in/webhook/scrape-download-abhijit?request_id=${request_id}`;
 
       let outputLink = '';
       try {
