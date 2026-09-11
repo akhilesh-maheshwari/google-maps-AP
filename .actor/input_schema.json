@@ -91,20 +91,12 @@
       ],
       "default": "en"
     },
-    "filters": {
-      "title": "🔍 Filters",
-      "type": "object",
-      "description": "Optional filters to narrow down results",
-      "editor": "proxy",
-      "properties": {
-        "withPhones": {
-          "title": "With Phones Only",
-          "type": "boolean",
-          "description": "Only return places that have a phone number listed",
-          "editor": "checkbox",
-          "default": false
-        }
-      }
+    "withPhones": {
+      "title": "🔍 With Phones Only",
+      "type": "boolean",
+      "description": "Only return places that have a phone number listed",
+      "editor": "checkbox",
+      "default": false
     }
   },
   "required": ["searchTerms", "location"]
