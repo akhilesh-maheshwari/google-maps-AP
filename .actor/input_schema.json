@@ -71,13 +71,12 @@
       "prefill": 150
     },
     "filters": {
-      "title": "🔍 Filters",
-      "type": "object",
-      "description": "Filter results. Add any key-value pairs. Default: withPhones filters to places with phone numbers only.",
-      "editor": "json",
-      "default": {
-        "withPhones": true
-      }
+  "title": "🔍 Filters",
+  "type": "string",
+  "description": "Enter filter value. Example: withPhones",
+  "editor": "textfield",
+  "default": "withPhones"
+}
     },
     "language": {
       "title": "Language",
