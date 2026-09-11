@@ -9,7 +9,7 @@ try {
   // ──────────────────────────────
   const input          = await Actor.getInput();
   const serviceTagName = input.fileName    || '';
-  const searchTerms    = input.searchTerms || [];
+  const searchTerms    = input.searchTerms ? [input.searchTerms.trim()] : [];
   const location       = input.location    || '';
   const country        = input.country     || 'US';
   const maxPlaces      = input.maxPlaces   || 150;
@@ -27,7 +27,7 @@ try {
 
   console.log('Tag Name     :', serviceTagName);
   console.log('Service      :', serviceName);
-  console.log('Search Terms :', searchTerms.length);
+  console.log('Search Term  :', searchTerms[0]);
   console.log('Location     :', location);
   console.log('Country      :', country);
   console.log('Max Places   :', maxPlaces);
@@ -35,7 +35,7 @@ try {
   console.log('Language     :', language);
 
   if (!serviceTagName.trim()) throw new Error('fileName is required!');
-  if (!searchTerms.length)    throw new Error('At least one search term is required!');
+  if (!searchTerms.length)    throw new Error('Search term is required!');
   if (!location.trim())       throw new Error('Location is required!');
 
   // ──────────────────────────────
@@ -46,7 +46,7 @@ try {
     .filter(t => t.length > 0);
 
   console.log('Valid Terms:', validTerms.length);
-  if (!validTerms.length) throw new Error('No valid search terms found!');
+  if (!validTerms.length) throw new Error('No valid search term found!');
 
   const rowCount   = validTerms.length;
   const csvContent = 'searchTerm\n' + validTerms.join('\n');
@@ -282,7 +282,7 @@ try {
             service_option_1 : serviceOption1,
             service_name     : serviceName,
             request_source   : requestSource,
-            entity           : validTerms.join(','),
+            entity           : validTerms[0],
             location,
             country          : country.toLowerCase(),
             max_results      : maxPlaces,
