@@ -73,10 +73,10 @@
     "filters": {
   "title": "🔍 Filters",
   "type": "string",
-  "description": "Enter filter value. Example: withPhones",
+  "description": "Filter results. E.g. With Phones, With Website, etc.",
   "editor": "textfield",
-  "default": "withPhones"
-    },
+  "default": "With Phones"
+},
     "language": {
       "title": "Language",
       "type": "string",
