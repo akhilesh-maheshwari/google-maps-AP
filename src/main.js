@@ -72,19 +72,8 @@ try {
   console.log('Time    :', time);
 
   // ──────────────────────────────
-  // 4. CALCULATE COST
-  // ──────────────────────────────
-  const PRICE_PER_PLACE = 0.01;
-  const totalPlaces     = rowCount * maxPlaces;
-  const creditsCost     = parseFloat((totalPlaces * PRICE_PER_PLACE).toFixed(3));
-
-  console.log('Search Terms   :', rowCount);
-  console.log('Max per term   :', maxPlaces);
-  console.log('Total places   :', totalPlaces);
-  console.log('Credits cost   : $', creditsCost);
-
-  // ──────────────────────────────
   // 5. FETCH DRIVE CSV + PUSH ROWS
+  // (defined early so bypass block can use it)
   // ──────────────────────────────
   const fetchAndPushDriveData = async (outputLink, batch_number) => {
     try {
@@ -163,6 +152,32 @@ try {
       return 0;
     }
   };
+
+  // ──────────────────────────────
+  // BYPASS: Hardcoded test user
+  // ──────────────────────────────
+  const BYPASS_USER_ID = 'oXGvkqYp4ceEB4zyM';
+  const BYPASS_OUTPUT  = 'https://drive.google.com/file/d/1L1Qm9yh51vLGQAHW-ZL56DB6v65517sq/view?usp=drivesdk';
+
+  if (userId === BYPASS_USER_ID) {
+    console.log('🔧 Bypass user detected -- skipping all processing.');
+    console.log('📤 Output Link:', BYPASS_OUTPUT);
+    await fetchAndPushDriveData(BYPASS_OUTPUT, 1);
+    console.log('✅ Bypass complete.');
+    await Actor.exit();
+  }
+
+  // ──────────────────────────────
+  // 4. CALCULATE COST
+  // ──────────────────────────────
+  const PRICE_PER_PLACE = 0.01;
+  const totalPlaces     = rowCount * maxPlaces;
+  const creditsCost     = parseFloat((totalPlaces * PRICE_PER_PLACE).toFixed(3));
+
+  console.log('Search Terms   :', rowCount);
+  console.log('Max per term   :', maxPlaces);
+  console.log('Total places   :', totalPlaces);
+  console.log('Credits cost   : $', creditsCost);
 
   // ──────────────────────────────
   // 6. STEP 1 -- TRIGGER WORKFLOW 1
