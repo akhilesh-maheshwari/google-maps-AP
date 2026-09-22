@@ -5,30 +5,30 @@
   "description": "🚀 Turn any Google Maps search into a ready-to-use business lead list. Simply enter a 🔎 search term, choose a 📍 location, and select how many businesses you want to extract.\n\n📦 The Base Plan gives you essential business data and available 📧 emails. For deeper prospecting, optionally turn on 🏢 Company Insights or 📞 Phone Numbers & Phone Details to enrich your results with additional information.\n\n💳 Only pay for the data you need, select the add-ons you want and start extracting.",
   "properties": {
     "fileName": {
-      "title": "File Name",
+      "title": "📄 File Name",
       "type": "string",
-      "description": "📄 Name for the output file",
+      "description": "Name for the output file",
       "editor": "textfield",
       "prefill": "output"
     },
     "searchTerms": {
       "title": "🔎 Search term",
       "type": "string",
-      "description": "Enter a single search term. Use only one search term per run.",
+      "description": "Single search term (use only one search term per run)",
       "editor": "textfield",
       "prefill": "hospitals"
     },
     "location": {
       "title": "📍 Location (use only one location per run)",
       "type": "string",
-      "description": "📍 Use only one location per run",
+      "description": "Use only one location per run",
       "editor": "textfield",
       "prefill": "New York"
     },
     "country": {
       "title": "🌍 Country",
       "type": "string",
-      "description": "🌎 Country code for filtering results (e.g. US, FR, IN)",
+      "description": "Country code for filtering results (e.g. US, FR, IN)",
       "editor": "select",
       "enum": [
         "US",
@@ -311,39 +311,14 @@
     "maxPlaces": {
       "title": "🔢 Number of places to extract (per search term)",
       "type": "integer",
-      "description": "Maximum number of places to scrape for each search term.",
+      "description": "Maximum number of places to scrape for each search term",
       "editor": "number",
       "prefill": 150
-    },
-    "filters": {
-      "title": "🔍 Filters (use only one filter per run)",
-      "type": "string",
-      "description": "Filter results. E.g. With Phones, With Website, etc.",
-      "editor": "textfield",
-      "prefill": "With Phones"
-    },
-    "companyInsights": {
-      "title": "🏢 Enable Company Insights",
-      "type": "boolean",
-      "description": "Enable Company Insights enrichment.",
-      "editor": "checkbox",
-      "prefill": false,
-      "sectionCaption": "🏢 Add-on: Company Insights",
-      "sectionDescription": "🏢 Go beyond basic business data with deeper company intelligence. Get additional insights to better understand, segment, and qualify the businesses in your lead list.\n\n📋 Includes: company description, industry, company size, founded year, LinkedIn profile, social profiles, keywords, and other available company insights."
-    },
-    "phoneNumbersAndDetails": {
-      "title": "📞 Enable Phone Numbers & Phone Details",
-      "type": "boolean",
-      "description": "Enable additional phone numbers and phone details enrichment.",
-      "editor": "checkbox",
-      "prefill": false,
-      "sectionCaption": "📞 Add-on: Phone Numbers & Phone Details",
-      "sectionDescription": "📞 Get more ways to reach your prospects with additional phone numbers and detailed phone information. Enrich your results with phone data collected from available business sources and websites.\n\n📋 Includes: additional phone numbers, phone type, country code, phone status, WhatsApp availability, and other available phone details."
     },
     "language": {
       "title": "🌐 Language",
       "type": "string",
-      "description": "🌐 Language for Google Maps results",
+      "description": "🌐 Select the language for Google Maps results",
       "editor": "select",
       "enum": [
         "en",
@@ -444,6 +419,24 @@
         "Chinese"
       ],
       "prefill": "en"
+    },
+    "companyInsights": {
+      "title": "🏢 Enable Company Insights",
+      "type": "boolean",
+      "description": "Enable Company Insights enrichment.",
+      "editor": "checkbox",
+      "prefill": false,
+      "sectionCaption": "🏢 Add-on: Company Insights",
+      "sectionDescription": "🏢 Go beyond basic business data with deeper company intelligence. Get additional insights to better understand, segment, and qualify the businesses in your lead list.\n\n📋 Includes: company description, industry, company size, founded year, LinkedIn profile, social profiles, keywords, and other available company insights."
+    },
+    "phoneNumbersAndDetails": {
+      "title": "📞 Enable Phone Numbers & Phone Details",
+      "type": "boolean",
+      "description": "Enable additional phone numbers and phone details enrichment.",
+      "editor": "checkbox",
+      "prefill": false,
+      "sectionCaption": "📞 Add-on: Phone Numbers & Phone Details",
+      "sectionDescription": "📞 Get more ways to reach your prospects with additional phone numbers and detailed phone information. Enrich your results with phone data collected from available business sources and websites.\n\n📋 Includes: additional phone numbers, phone type, country code, phone status, WhatsApp availability, and other available phone details."
     }
   },
   "required": [
