@@ -1,4 +1,3 @@
-
 {
   "actorSpecification": 1,
   "name": "google-maps-scraper",
@@ -28,41 +27,136 @@
     "dataset": {
       "actorSpecification": 1,
       "title": "Scraped Places",
+
       "views": {
         "overview": {
           "title": "Overview",
+
           "transformation": {
             "fields": [
-              "place_id",
+              "record_id",
               "name",
               "category",
+              "type",
+              "categories",
+              "subtypes",
+              "description",
+              "website",
+              "website_domain",
+              "full_address",
+              "street",
+              "locality",
+              "city",
+              "state",
+              "state_code",
+              "county",
+              "postal_code",
+              "country_code",
+              "latitude",
+              "longitude",
+              "h3",
+              "plus_code",
+              "time_zone",
+              "email",
+              "other_emails",
+              "email_status",
+              "email_confidence",
+              "email_source",
               "rating",
               "review_count",
-              "price",
-              "address",
-              "phone",
-              "website",
-              "email",
+              "reviews_per_score",
+              "popular_times",
+              "price_level",
+              "price_range",
+              "business_status",
+              "verified",
+              "claimed",
+              "permanently_closed",
+              "temporarily_closed",
+              "open_status",
+              "hours_csv",
+              "about",
               "maps_url",
-              "ws_title",
-              "ws_emails",
-              "ws_phones",
-              "ws_social_links",
-              "ws_description",
-              "ws_legal_name",
-              "ws_founding_date",
-              "ws_employees",
-              "ws_has_contact_form",
-              "ws_address",
-              "ws_logo",
-              "ws_scrape_status"
+              "location_link",
+              "reviews_link",
+              "menu_link",
+              "reservation_link",
+              "booking_link",
+              "order_links",
+              "photo_count",
+              "main_image_url",
+              "logo",
+              "street_view",
+              "social_links",
+              "facebook_url",
+              "instagram_url",
+              "linkedin_url",
+              "x_url",
+              "youtube_url",
+              "tiktok_url",
+              "pinterest_url",
+              "owner_id",
+              "owner_title",
+              "owner_link",
+              "owner_name",
+              "owner_source",
+              "place_id",
+              "cid",
+              "google_id",
+              "kgmid",
+              "name_for_emails",
+              "query",
+              "source",
+              "scraped_at",
+              "phone",
+              "other_phones",
+              "company_phone",
+              "company_phones",
+              "phone_type",
+              "company_phone_type",
+              "phone_carrier",
+              "company_phone_carrier",
+              "company_name",
+              "li_industry",
+              "li_company_url",
+              "founded_year",
+              "li_employee_count",
+              "contact_name",
+              "contact_first_name",
+              "contact_last_name",
+              "contact_headline",
+              "website_title",
+              "website_description",
+              "website_generator",
+              "website_has_gtm",
+              "website_has_fb_pixel",
+              "facebook",
+              "instagram",
+              "linkedin",
+              "x",
+              "youtube",
+              "tiktok",
+              "pinterest",
+              "social_scraped_at",
+              "company_insights.name",
+              "company_insights.industry",
+              "company_insights.employees",
+              "company_insights.revenue",
+              "company_insights.is_public",
+              "company_insights.country",
+              "company_insights.state",
+              "company_insights.city",
+              "company_insights.zip",
+              "company_insights.address"
             ]
           },
+
           "display": {
             "component": "table",
+
             "properties": {
-              "place_id": {
-                "label": "Place ID",
+              "record_id": {
+                "label": "Record ID",
                 "format": "text"
               },
               "name": {
@@ -73,6 +167,106 @@
                 "label": "Category",
                 "format": "text"
               },
+              "type": {
+                "label": "Type",
+                "format": "text"
+              },
+              "categories": {
+                "label": "Categories",
+                "format": "text"
+              },
+              "subtypes": {
+                "label": "Subtypes",
+                "format": "text"
+              },
+              "description": {
+                "label": "Description",
+                "format": "text"
+              },
+              "website": {
+                "label": "Website",
+                "format": "link"
+              },
+              "website_domain": {
+                "label": "Website Domain",
+                "format": "text"
+              },
+              "full_address": {
+                "label": "Full Address",
+                "format": "text"
+              },
+              "street": {
+                "label": "Street",
+                "format": "text"
+              },
+              "locality": {
+                "label": "Locality",
+                "format": "text"
+              },
+              "city": {
+                "label": "City",
+                "format": "text"
+              },
+              "state": {
+                "label": "State",
+                "format": "text"
+              },
+              "state_code": {
+                "label": "State Code",
+                "format": "text"
+              },
+              "county": {
+                "label": "County",
+                "format": "text"
+              },
+              "postal_code": {
+                "label": "Postal Code",
+                "format": "text"
+              },
+              "country_code": {
+                "label": "Country Code",
+                "format": "text"
+              },
+              "latitude": {
+                "label": "Latitude",
+                "format": "text"
+              },
+              "longitude": {
+                "label": "Longitude",
+                "format": "text"
+              },
+              "h3": {
+                "label": "H3",
+                "format": "text"
+              },
+              "plus_code": {
+                "label": "Plus Code",
+                "format": "text"
+              },
+              "time_zone": {
+                "label": "Time Zone",
+                "format": "text"
+              },
+              "email": {
+                "label": "Email",
+                "format": "text"
+              },
+              "other_emails": {
+                "label": "Other Emails",
+                "format": "text"
+              },
+              "email_status": {
+                "label": "Email Status",
+                "format": "text"
+              },
+              "email_confidence": {
+                "label": "Email Confidence",
+                "format": "text"
+              },
+              "email_source": {
+                "label": "Email Source",
+                "format": "text"
+              },
               "rating": {
                 "label": "Rating",
                 "format": "text"
@@ -81,76 +275,340 @@
                 "label": "Review Count",
                 "format": "text"
               },
-              "price": {
-                "label": "Price",
+              "reviews_per_score": {
+                "label": "Reviews Per Score",
                 "format": "text"
               },
-              "address": {
-                "label": "Address",
+              "popular_times": {
+                "label": "Popular Times",
                 "format": "text"
               },
-              "phone": {
-                "label": "Phone",
+              "price_level": {
+                "label": "Price Level",
                 "format": "text"
               },
-              "website": {
-                "label": "Website",
-                "format": "link"
+              "price_range": {
+                "label": "Price Range",
+                "format": "text"
               },
-              "email": {
-                "label": "Email",
+              "business_status": {
+                "label": "Business Status",
+                "format": "text"
+              },
+              "verified": {
+                "label": "Verified",
+                "format": "text"
+              },
+              "claimed": {
+                "label": "Claimed",
+                "format": "text"
+              },
+              "permanently_closed": {
+                "label": "Permanently Closed",
+                "format": "text"
+              },
+              "temporarily_closed": {
+                "label": "Temporarily Closed",
+                "format": "text"
+              },
+              "open_status": {
+                "label": "Open Status",
+                "format": "text"
+              },
+              "hours_csv": {
+                "label": "Hours",
+                "format": "text"
+              },
+              "about": {
+                "label": "About",
                 "format": "text"
               },
               "maps_url": {
                 "label": "Maps URL",
                 "format": "link"
               },
-              "ws_title": {
-                "label": "Website Title",
+              "location_link": {
+                "label": "Location Link",
+                "format": "link"
+              },
+              "reviews_link": {
+                "label": "Reviews Link",
+                "format": "link"
+              },
+              "menu_link": {
+                "label": "Menu Link",
+                "format": "link"
+              },
+              "reservation_link": {
+                "label": "Reservation Link",
+                "format": "link"
+              },
+              "booking_link": {
+                "label": "Booking Link",
+                "format": "link"
+              },
+              "order_links": {
+                "label": "Order Links",
                 "format": "text"
               },
-              "ws_emails": {
-                "label": "Website Emails",
+              "photo_count": {
+                "label": "Photo Count",
                 "format": "text"
               },
-              "ws_phones": {
-                "label": "Website Phones",
-                "format": "text"
+              "main_image_url": {
+                "label": "Main Image",
+                "format": "link"
               },
-              "ws_social_links": {
+              "logo": {
+                "label": "Logo",
+                "format": "link"
+              },
+              "street_view": {
+                "label": "Street View",
+                "format": "link"
+              },
+              "social_links": {
                 "label": "Social Links",
                 "format": "text"
               },
-              "ws_description": {
+              "facebook_url": {
+                "label": "Facebook",
+                "format": "link"
+              },
+              "instagram_url": {
+                "label": "Instagram",
+                "format": "link"
+              },
+              "linkedin_url": {
+                "label": "LinkedIn",
+                "format": "link"
+              },
+              "x_url": {
+                "label": "X",
+                "format": "link"
+              },
+              "youtube_url": {
+                "label": "YouTube",
+                "format": "link"
+              },
+              "tiktok_url": {
+                "label": "TikTok",
+                "format": "link"
+              },
+              "pinterest_url": {
+                "label": "Pinterest",
+                "format": "link"
+              },
+              "owner_id": {
+                "label": "Owner ID",
+                "format": "text"
+              },
+              "owner_title": {
+                "label": "Owner Title",
+                "format": "text"
+              },
+              "owner_link": {
+                "label": "Owner Link",
+                "format": "link"
+              },
+              "owner_name": {
+                "label": "Owner Name",
+                "format": "text"
+              },
+              "owner_source": {
+                "label": "Owner Source",
+                "format": "text"
+              },
+              "place_id": {
+                "label": "Place ID",
+                "format": "text"
+              },
+              "cid": {
+                "label": "CID",
+                "format": "text"
+              },
+              "google_id": {
+                "label": "Google ID",
+                "format": "text"
+              },
+              "kgmid": {
+                "label": "KGMID",
+                "format": "text"
+              },
+              "name_for_emails": {
+                "label": "Name for Emails",
+                "format": "text"
+              },
+              "query": {
+                "label": "Query",
+                "format": "text"
+              },
+              "source": {
+                "label": "Source",
+                "format": "text"
+              },
+              "scraped_at": {
+                "label": "Scraped At",
+                "format": "text"
+              },
+              "phone": {
+                "label": "Phone",
+                "format": "text"
+              },
+              "other_phones": {
+                "label": "Other Phones",
+                "format": "text"
+              },
+              "company_phone": {
+                "label": "Company Phone",
+                "format": "text"
+              },
+              "company_phones": {
+                "label": "Company Phones",
+                "format": "text"
+              },
+              "phone_type": {
+                "label": "Phone Type",
+                "format": "text"
+              },
+              "company_phone_type": {
+                "label": "Company Phone Type",
+                "format": "text"
+              },
+              "phone_carrier": {
+                "label": "Phone Carrier",
+                "format": "text"
+              },
+              "company_phone_carrier": {
+                "label": "Company Phone Carrier",
+                "format": "text"
+              },
+              "company_name": {
+                "label": "Company Name",
+                "format": "text"
+              },
+              "li_industry": {
+                "label": "LinkedIn Industry",
+                "format": "text"
+              },
+              "li_company_url": {
+                "label": "LinkedIn Company URL",
+                "format": "link"
+              },
+              "founded_year": {
+                "label": "Founded Year",
+                "format": "text"
+              },
+              "li_employee_count": {
+                "label": "LinkedIn Employee Count",
+                "format": "text"
+              },
+              "contact_name": {
+                "label": "Contact Name",
+                "format": "text"
+              },
+              "contact_first_name": {
+                "label": "Contact First Name",
+                "format": "text"
+              },
+              "contact_last_name": {
+                "label": "Contact Last Name",
+                "format": "text"
+              },
+              "contact_headline": {
+                "label": "Contact Headline",
+                "format": "text"
+              },
+              "website_title": {
+                "label": "Website Title",
+                "format": "text"
+              },
+              "website_description": {
                 "label": "Website Description",
                 "format": "text"
               },
-              "ws_legal_name": {
-                "label": "Legal Name",
+              "website_generator": {
+                "label": "Website Generator",
                 "format": "text"
               },
-              "ws_founding_date": {
-                "label": "Founding Date",
+              "website_has_gtm": {
+                "label": "Website Has GTM",
                 "format": "text"
               },
-              "ws_employees": {
-                "label": "Employees",
+              "website_has_fb_pixel": {
+                "label": "Website Has Facebook Pixel",
                 "format": "text"
               },
-              "ws_has_contact_form": {
-                "label": "Has Contact Form",
+              "facebook": {
+                "label": "Facebook Data",
                 "format": "text"
               },
-              "ws_address": {
-                "label": "Website Address",
+              "instagram": {
+                "label": "Instagram Data",
                 "format": "text"
               },
-              "ws_logo": {
-                "label": "Website Logo",
-                "format": "link"
+              "linkedin": {
+                "label": "LinkedIn Data",
+                "format": "text"
               },
-              "ws_scrape_status": {
-                "label": "Website Scrape Status",
+              "x": {
+                "label": "X Data",
+                "format": "text"
+              },
+              "youtube": {
+                "label": "YouTube Data",
+                "format": "text"
+              },
+              "tiktok": {
+                "label": "TikTok Data",
+                "format": "text"
+              },
+              "pinterest": {
+                "label": "Pinterest Data",
+                "format": "text"
+              },
+              "social_scraped_at": {
+                "label": "Social Scraped At",
+                "format": "text"
+              },
+              "company_insights.name": {
+                "label": "Company Insights Name",
+                "format": "text"
+              },
+              "company_insights.industry": {
+                "label": "Company Insights Industry",
+                "format": "text"
+              },
+              "company_insights.employees": {
+                "label": "Company Insights Employees",
+                "format": "text"
+              },
+              "company_insights.revenue": {
+                "label": "Company Insights Revenue",
+                "format": "text"
+              },
+              "company_insights.is_public": {
+                "label": "Company Insights Public",
+                "format": "text"
+              },
+              "company_insights.country": {
+                "label": "Company Insights Country",
+                "format": "text"
+              },
+              "company_insights.state": {
+                "label": "Company Insights State",
+                "format": "text"
+              },
+              "company_insights.city": {
+                "label": "Company Insights City",
+                "format": "text"
+              },
+              "company_insights.zip": {
+                "label": "Company Insights ZIP",
+                "format": "text"
+              },
+              "company_insights.address": {
+                "label": "Company Insights Address",
                 "format": "text"
               }
             }
