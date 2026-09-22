@@ -311,9 +311,26 @@
     "maxPlaces": {
       "title": "🔢 Number of places to extract (per search term)",
       "type": "integer",
-      "description": "Maximum number of places to scrape for each search term",
+      "description": "Maximum number of places to scrape for each search term.",
       "editor": "number",
       "prefill": 150
+    },
+    "package": {
+      "title": "📦 Package",
+      "type": "string",
+      "description": "💳 Select the package you want to use.",
+      "editor": "select",
+      "enum": [
+        "Base Plan",
+        "Company Insights",
+        "Phone Numbers & Phone Details"
+      ],
+      "enumTitles": [
+        "Base Plan",
+        "Company Insights",
+        "Phone Numbers & Phone Details"
+      ],
+      "prefill": "Base Plan"
     },
     "language": {
       "title": "🌐 Language",
