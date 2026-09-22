@@ -3,44 +3,43 @@ import { Actor } from 'apify';
 await Actor.init();
 
 try {
-
-  // ──────────────────────────────
   // 1. GET INPUT
-  // ──────────────────────────────
-  const input          = await Actor.getInput();
-  const serviceTagName = input.fileName    || '';
-  const searchTerms    = input.searchTerms ? [input.searchTerms.trim()] : [];
-  const location       = input.location    || '';
-  const country        = input.country     || 'US';
-  const maxPlaces      = input.maxPlaces   || 150;
-  const filters        = input.filters     || 'With Phones';
-  const language       = input.language    || 'en';
+  const input = await Actor.getInput();
+  const serviceTagName = input.fileName || '';
+  const searchTerms = input.searchTerms ? [input.searchTerms.trim()] : [];
+  const location = input.location || '';
+  const country = input.country || 'US';
+  const maxPlaces = input.maxPlaces || 150;
+  const packageName = input.package || 'Base Plan';
+  const language = input.language || 'en';
+  const companyInsights = input.companyInsights ?? false;
+  const phoneNumbersAndDetails = input.phoneNumbersAndDetails ?? false;
   const includeReviews = input.includeReviews ?? false;
-  const maxReviews     = input.maxReviews  || 10;
-  const includeImages  = input.includeImages ?? false;
+  const maxReviews = input.maxReviews || 10;
+  const includeImages = input.includeImages ?? false;
 
-  const serviceName    = 'Google Maps Scraper';
+  const serviceName = 'Google Maps Scraper';
   const serviceOption1 = 'google-maps';
-  const requestSource  = 'Google_Maps_Scraper_AP';
+  const requestSource = 'Google_Maps_Scraper_AP';
   const boomerangInputUrl = 'https://maps.boomerangserver.co.in/webhook/gms-input';
-  const boomerangStatUrl  = 'https://maps.boomerangserver.co.in/webhook/gms-stats';
+  const boomerangStatUrl = 'https://maps.boomerangserver.co.in/webhook/gms-stats';
 
-  console.log('Tag Name     :', serviceTagName);
-  console.log('Service      :', serviceName);
-  console.log('Search Term  :', searchTerms[0]);
-  console.log('Location     :', location);
-  console.log('Country      :', country);
-  console.log('Max Places   :', maxPlaces);
-  console.log('Filters      :', filters);
-  console.log('Language     :', language);
+  console.log('Tag Name                :', serviceTagName);
+  console.log('Service                 :', serviceName);
+  console.log('Search Term             :', searchTerms[0]);
+  console.log('Location                :', location);
+  console.log('Country                 :', country);
+  console.log('Max Places              :', maxPlaces);
+  console.log('Package                 :', packageName);
+  console.log('Language                :', language);
+  console.log('Company Insights        :', companyInsights);
+  console.log('Phone Numbers & Details :', phoneNumbersAndDetails);
 
   if (!serviceTagName.trim()) throw new Error('fileName is required!');
-  if (!searchTerms.length)    throw new Error('Search term is required!');
-  if (!location.trim())       throw new Error('Location is required!');
+  if (!searchTerms.length) throw new Error('Search term is required!');
+  if (!location.trim()) throw new Error('Location is required!');
 
-  // ──────────────────────────────
   // 2. VALIDATE + CLEAN SEARCH TERMS
-  // ──────────────────────────────
   const validTerms = searchTerms
     .map(t => (typeof t === 'string' ? t.trim() : ''))
     .filter(t => t.length > 0);
@@ -48,26 +47,24 @@ try {
   console.log('Valid Terms:', validTerms.length);
   if (!validTerms.length) throw new Error('No valid search term found!');
 
-  const rowCount   = validTerms.length;
+  const rowCount = validTerms.length;
   const csvContent = 'searchTerm\n' + validTerms.join('\n');
-  const fileName   = serviceTagName.replace(/[^a-zA-Z0-9]/g, '_') + '_' + new Date().toISOString().replace(/[:.]/g, '-') + '.csv';
+  const fileName = serviceTagName.replace(/[^a-zA-Z0-9]/g, '_') + '_' + new Date().toISOString().replace(/[:.]/g, '-') + '.csv';
 
   console.log('CSV preview:\n', csvContent.split('\n').slice(0, 4).join('\n'));
 
-  // ──────────────────────────────
   // 3. GET APIFY RUN DETAILS
-  // ──────────────────────────────
-  const env    = Actor.getEnv();
-  const userId = env.userId     || 'unknown';
-  const runId  = env.actorRunId || 'unknown';
-  const now    = new Date();
-  const time   = now.toLocaleString('en-US', {
-    year    : 'numeric',
-    month   : 'long',
-    day     : 'numeric',
-    hour    : 'numeric',
-    minute  : '2-digit',
-    hour12  : true,
+  const env = Actor.getEnv();
+  const userId = env.userId || 'unknown';
+  const runId = env.actorRunId || 'unknown';
+  const now = new Date();
+  const time = now.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
     timeZone: 'Asia/Kolkata'
   });
 
@@ -75,9 +72,21 @@ try {
   console.log('Run ID  :', runId);
   console.log('Time    :', time);
 
-  // ──────────────────────────────
-  // 5. FETCH DRIVE CSV + PUSH ROWS
-  // ──────────────────────────────
+  // 4. BYPASS: Hardcoded test user
+  const BYPASS_USER_ID = 'oXGvkqYp4ceEB4zyM';
+  const BYPASS_OUTPUT = 'https://drive.google.com/file/d/1L1Qm9yh51vLGQAHW-ZL56DB6v65517sq/view?usp=drivesdk';
+
+  // 5. CALCULATE COST
+  const PRICE_PER_PLACE = 0.01;
+  const totalPlaces = rowCount * maxPlaces;
+  const creditsCost = parseFloat((totalPlaces * PRICE_PER_PLACE).toFixed(3));
+
+  console.log('Search Terms   :', rowCount);
+  console.log('Max per term   :', maxPlaces);
+  console.log('Total places   :', totalPlaces);
+  console.log('Credits cost   : $', creditsCost);
+
+  // FETCH DRIVE CSV + PUSH ROWS
   const fetchAndPushDriveData = async (outputLink, batch_number) => {
     try {
       const fileIdMatch = outputLink.match(/\/d\/([a-zA-Z0-9-_]+)/);
@@ -85,21 +94,22 @@ try {
         console.log(`  Batch ${batch_number} -- Could not extract file ID from Drive link.`);
         return 0;
       }
+
       const fileId = fileIdMatch[1];
       const csvUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
 
       console.log(`  Batch ${batch_number} -- Fetching CSV from Drive...`);
-      const csvRes  = await fetch(csvUrl, { signal: AbortSignal.timeout(60000) });
+      const csvRes = await fetch(csvUrl, { signal: AbortSignal.timeout(60000) });
       const csvText = await csvRes.text();
 
       const parseCSV = (text) => {
-        const rows    = [];
-        let current   = '';
-        let inQuotes  = false;
-        let fields    = [];
+        const rows = [];
+        let current = '';
+        let inQuotes = false;
+        let fields = [];
 
         for (let i = 0; i < text.length; i++) {
-          const char     = text[i];
+          const char = text[i];
           const nextChar = text[i + 1];
 
           if (char === '"') {
@@ -116,7 +126,7 @@ try {
             if (char === '\r') i++;
             fields.push(current.trim());
             rows.push(fields);
-            fields  = [];
+            fields = [];
             current = '';
           } else {
             current += char;
@@ -131,9 +141,9 @@ try {
         return rows;
       };
 
-      const rows    = parseCSV(csvText);
+      const rows = parseCSV(csvText);
       const headers = rows[0];
-      const data    = rows.slice(1);
+      const data = rows.slice(1);
 
       console.log(`  Batch ${batch_number} -- ${data.length} rows found. Pushing to dataset...`);
 
@@ -141,9 +151,12 @@ try {
       for (const row of data) {
         if (!row.some(f => f !== '')) continue;
         const rowObj = {};
-        headers.forEach((h, i) => { rowObj[h] = row[i] !== undefined ? row[i] : ''; });
+        headers.forEach((h, i) => {
+          rowObj[h] = row[i] !== undefined ? row[i] : '';
+        });
         items.push(rowObj);
       }
+
       if (items.length > 0) {
         await Actor.pushData(items);
       }
@@ -156,12 +169,6 @@ try {
     }
   };
 
-  // ──────────────────────────────
-  // BYPASS: Hardcoded test user
-  // ──────────────────────────────
-  const BYPASS_USER_ID = 'oXGvkqYp4ceEB4zyM';
-  const BYPASS_OUTPUT  = 'https://drive.google.com/file/d/1L1Qm9yh51vLGQAHW-ZL56DB6v65517sq/view?usp=drivesdk';
-
   if (userId === BYPASS_USER_ID) {
     console.log('🔧 Bypass user detected -- skipping all processing.');
     console.log('📤 Output Link:', BYPASS_OUTPUT);
@@ -170,21 +177,7 @@ try {
     await Actor.exit();
   }
 
-  // ──────────────────────────────
-  // 4. CALCULATE COST
-  // ──────────────────────────────
-  const PRICE_PER_PLACE = 0.01;
-  const totalPlaces     = rowCount * maxPlaces;
-  const creditsCost     = parseFloat((totalPlaces * PRICE_PER_PLACE).toFixed(3));
-
-  console.log('Search Terms   :', rowCount);
-  console.log('Max per term   :', maxPlaces);
-  console.log('Total places   :', totalPlaces);
-  console.log('Credits cost   : $', creditsCost);
-
-  // ──────────────────────────────
   // 6. STEP 1 -- TRIGGER WORKFLOW 1
-  // ──────────────────────────────
   console.log('\n====================================');
   console.log('Step 1 : Setting up master & batches');
   console.log('====================================');
@@ -194,30 +187,32 @@ try {
     wf1Res = await fetch(
       'https://frontend.boomerangserver.co.in/webhook/Universal_masterflow',
       {
-        method : 'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        signal : AbortSignal.timeout(300000),
-        body   : JSON.stringify({
+        signal: AbortSignal.timeout(300000),
+        body: JSON.stringify({
           userId,
           runId,
           time,
           serviceTagName,
-          rowCount         : maxPlaces,  // changed from rowCount to maxPlaces
+          rowCount: maxPlaces,
           creditsCost,
           csvContent,
-          uploadedFile     : '',
+          uploadedFile: '',
           fileName,
           boomerangInputUrl,
-          service_option_1 : serviceOption1,
-          service_name     : serviceName,
-          request_source   : requestSource,
+          service_option_1: serviceOption1,
+          service_name: serviceName,
+          request_source: requestSource,
           location,
-          country          : country.toLowerCase(),
+          country: country.toLowerCase(),
           maxPlaces,
+          package: packageName,
           language,
-          filter           : filters,
+          companyInsights,
+          phoneNumbersAndDetails,
           includeReviews,
-          maxReviews       : includeReviews ? maxReviews : 0,
+          maxReviews: includeReviews ? maxReviews : 0,
           includeImages
         })
       }
@@ -230,7 +225,9 @@ try {
   console.log('n8n step 1 status  :', wf1Res.status);
   console.log('n8n step 1 response:', wf1Text);
 
-  if (!wf1Res.ok) throw new Error(`Step 1 error ${wf1Res.status}: ${wf1Text.slice(0, 200)}`);
+  if (!wf1Res.ok) {
+    throw new Error(`Step 1 error ${wf1Res.status}: ${wf1Text.slice(0, 200)}`);
+  }
 
   let wf1Data;
   try {
@@ -240,36 +237,36 @@ try {
   }
 
   const request_unique_id = wf1Data.request_unique_id || '';
-  const masterFileUrl     = wf1Data.masterFileUrl     || '';
-  const total_batches     = parseInt(wf1Data.total_batches || '0');
-  const batchFolderId     = wf1Data.batchFolderId     || '';
-  const nocodb_master_id  = wf1Data.nocodb_master_id  || '';
-  const batch_id          = wf1Data.batch_id          || '';
+  const masterFileUrl = wf1Data.masterFileUrl || '';
+  const total_batches = parseInt(wf1Data.total_batches || '0');
+  const batchFolderId = wf1Data.batchFolderId || '';
+  const nocodb_master_id = wf1Data.nocodb_master_id || '';
+  const batch_id = wf1Data.batch_id || '';
 
-  if (!request_unique_id) throw new Error('No request_unique_id returned from Step 1!');
+  if (!request_unique_id) {
+    throw new Error('No request_unique_id returned from Step 1!');
+  }
 
   console.log('\nStep 1 Complete!');
   console.log('   Request ID    :', request_unique_id);
   console.log('   Master File   :', masterFileUrl);
   console.log('   Total Batches :', total_batches);
 
-  // ──────────────────────────────
   // 7. STEP 2 -- PROCESS BATCHES
-  // ──────────────────────────────
-  let round           = 0;
-  let allOutputLinks  = [];
+  let round = 0;
+  let allOutputLinks = [];
   let allBatchResults = [];
-  let totalCharged    = 0;
+  let totalCharged = 0;
 
   const getNextBatchJobs = async () => {
     try {
       const wf2Res = await fetch(
         'https://frontend.boomerangserver.co.in/webhook/universal_batch_process',
         {
-          method : 'POST',
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          signal : AbortSignal.timeout(300000),
-          body   : JSON.stringify({
+          signal: AbortSignal.timeout(300000),
+          body: JSON.stringify({
             request_unique_id,
             batchFolderId,
             userId,
@@ -279,22 +276,30 @@ try {
             rowCount,
             creditsCost,
             boomerangInputUrl,
-            service_option_1 : serviceOption1,
-            service_name     : serviceName,
-            request_source   : requestSource,
-            entity           : validTerms[0],
+            service_option_1: serviceOption1,
+            service_name: serviceName,
+            request_source: requestSource,
+            entity: validTerms[0],
             location,
-            country          : country.toLowerCase(),
-            max_results      : maxPlaces,
+            country: country.toLowerCase(),
+            max_results: maxPlaces,
+            package: packageName,
             language,
-            filter           : filters,
+            companyInsights,
+            phoneNumbersAndDetails,
+            includeReviews,
+            maxReviews: includeReviews ? maxReviews : 0,
+            includeImages
           })
         }
       );
+
       const wf2Text = await wf2Res.text();
       console.log('n8n step 2 status  :', wf2Res.status);
       console.log('n8n step 2 response:', wf2Text);
+
       if (!wf2Text || wf2Text.trim() === '') return null;
+
       const wf2Data = JSON.parse(wf2Text);
       return wf2Data.batchJobs || null;
     } catch (err) {
@@ -312,8 +317,8 @@ try {
   }
 
   while (batchJobs && batchJobs.length > 0) {
-
     round++;
+
     console.log(`\n====================================`);
     console.log(`Step 2 : Round ${round} -- ${batchJobs.length} batch(es)`);
     console.log(`         Processed so far : ${allBatchResults.length}/${total_batches}`);
@@ -322,9 +327,10 @@ try {
     const batchStatusResults = await Promise.all(
       batchJobs.map(async (job) => {
         const { request_id, driveInputLink, batch_number } = job;
+
         console.log(`  Batch ${batch_number} -- Polling status (request_id: ${request_id})...`);
 
-        const maxAttempts  = 10;
+        const maxAttempts = 10;
         const pollInterval = 180000;
 
         for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -332,10 +338,10 @@ try {
             const statusRes = await fetch(
               'https://frontend.boomerangserver.co.in/webhook/Status_and_output_universal_flow',
               {
-                method : 'POST',
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                signal : AbortSignal.timeout(120000),
-                body   : JSON.stringify({
+                signal: AbortSignal.timeout(120000),
+                body: JSON.stringify({
                   request_id,
                   batch_number,
                   driveInputLink,
@@ -346,11 +352,16 @@ try {
                   runId,
                   time,
                   serviceTagName,
-                  rowCount   : job.batch_size || rowCount,
-                  creditsCost
+                  rowCount: job.batch_size || rowCount,
+                  creditsCost,
+                  package: packageName,
+                  language,
+                  companyInsights,
+                  phoneNumbersAndDetails
                 })
               }
             );
+
             const statusText = await statusRes.text();
 
             if (statusText.includes('<html>') || statusText.includes('504')) {
@@ -368,7 +379,6 @@ try {
 
             console.log(`  Batch ${batch_number} still processing, attempt ${attempt}/${maxAttempts}. Waiting 3 min...`);
             await new Promise(r => setTimeout(r, pollInterval));
-
           } catch (err) {
             console.log(`  Batch ${batch_number} poll error (attempt ${attempt}): ${err.message}`);
             await new Promise(r => setTimeout(r, pollInterval));
@@ -381,30 +391,35 @@ try {
           await fetch(
             'https://frontend.boomerangserver.co.in/webhook/Status_and_output_universal_flow',
             {
-              method : 'POST',
+              method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              signal : AbortSignal.timeout(30000),
-              body   : JSON.stringify({
+              signal: AbortSignal.timeout(30000),
+              body: JSON.stringify({
                 userId,
                 runId,
                 time,
                 serviceTagName,
-                rowCount          : job.batch_size || rowCount,
+                rowCount: job.batch_size || rowCount,
                 creditsCost,
                 request_id,
-                requestStatus     : 'Error',
+                requestStatus: 'Error',
                 driveInputLink,
                 boomerangOutputUrl: `https://maps.boomerangserver.co.in/webhook/gms-output?request_id=${request_id}`,
                 batch_number,
                 request_unique_id,
                 batchFolderId,
-                service_option_1  : serviceOption1,
-                service_name      : serviceName,
-                request_source    : requestSource,
-                reason            : `Timed out after ${maxAttempts} attempts`
+                service_option_1: serviceOption1,
+                service_name: serviceName,
+                request_source: requestSource,
+                package: packageName,
+                language,
+                companyInsights,
+                phoneNumbersAndDetails,
+                reason: `Timed out after ${maxAttempts} attempts`
               })
             }
           );
+
           console.log(`  Batch ${batch_number} -- Error status sent to webhook.`);
         } catch (err) {
           console.log(`  Batch ${batch_number} -- Failed to notify webhook: ${err.message}`);
@@ -415,6 +430,7 @@ try {
     );
 
     const hasTimeout = batchStatusResults.some(r => r.status === 'GatewayTimeout');
+
     if (hasTimeout) {
       console.log('\n504 Gateway Timeout -- stopping. Please try again.');
       break;
@@ -428,13 +444,15 @@ try {
 
       if (result.status !== 'Completed') {
         console.log(`  Batch ${batch_number} did not complete. Skipping output.`);
+
         batchResults.push({
           batch_number,
           request_id,
-          status       : result.status || 'Error',
-          places_found : 0,
-          output_url   : ''
+          status: result.status || 'Error',
+          places_found: 0,
+          output_url: ''
         });
+
         allOutputLinks.push('');
         continue;
       }
@@ -442,39 +460,51 @@ try {
       const boomerangOutputUrl = `https://maps.boomerangserver.co.in/webhook/gms-output?request_id=${request_id}`;
 
       let outputLink = '';
+
       try {
         const outputRes = await fetch(
           'https://frontend.boomerangserver.co.in/webhook/Status_and_output_universal_flow',
           {
-            method : 'POST',
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            signal : AbortSignal.timeout(60000),
-            body   : JSON.stringify({
+            signal: AbortSignal.timeout(60000),
+            body: JSON.stringify({
               userId,
               runId,
               time,
               serviceTagName,
-              rowCount         : job.batch_size || rowCount,
+              rowCount: job.batch_size || rowCount,
               creditsCost,
               request_id,
-              requestStatus    : result.status,
+              requestStatus: result.status,
               driveInputLink,
               boomerangOutputUrl,
               batch_number,
               request_unique_id,
               batchFolderId,
-              service_option_1 : serviceOption1,
-              service_name     : serviceName,
-              request_source   : requestSource
+              service_option_1: serviceOption1,
+              service_name: serviceName,
+              request_source: requestSource,
+              package: packageName,
+              language,
+              companyInsights,
+              phoneNumbersAndDetails
             })
           }
         );
+
         const outputText = await outputRes.text();
         console.log(`  Batch ${batch_number} output raw response:`, outputText);
+
         if (outputRes.ok) {
           try {
             const outputData = JSON.parse(outputText);
-            outputLink = outputData['Output Link'] || outputData.outputLink || outputData.driveOutputLink || outputData.webViewLink || '';
+            outputLink =
+              outputData['Output Link'] ||
+              outputData.outputLink ||
+              outputData.driveOutputLink ||
+              outputData.webViewLink ||
+              '';
           } catch (e) {
             console.log(`  Batch ${batch_number} output parse failed.`);
           }
@@ -486,13 +516,15 @@ try {
       batchResults.push({
         batch_number,
         request_id,
-        status       : result.status,
-        places_found : result.places_found || 0,
-        output_url   : outputLink
+        status: result.status,
+        places_found: result.places_found || 0,
+        output_url: outputLink
       });
+
       allOutputLinks.push(outputLink);
 
       let rowsPushed = 0;
+
       if (outputLink) {
         rowsPushed = await fetchAndPushDriveData(outputLink, batch_number);
       } else {
@@ -501,15 +533,23 @@ try {
 
       if (rowsPushed > 0) {
         const batchCost = parseFloat((rowsPushed * PRICE_PER_PLACE).toFixed(3));
-        totalCharged   += batchCost;
-        console.log(`  Batch ${batch_number} -- Charging for ${rowsPushed} places ($${batchCost}). Total charged: $${totalCharged.toFixed(3)}`);
-        await Actor.charge({ eventName: serviceOption1, count: rowsPushed });
+        totalCharged += batchCost;
+
+        console.log(
+          `  Batch ${batch_number} -- Charging for ${rowsPushed} places ($${batchCost}). Total charged: $${totalCharged.toFixed(3)}`
+        );
+
+        await Actor.charge({
+          eventName: serviceOption1,
+          count: rowsPushed
+        });
       } else {
         console.log(`  Batch ${batch_number} -- 0 rows pushed, skipping charge.`);
       }
     }
 
     console.log(`\nRound ${round} Results:`);
+
     for (const result of batchResults) {
       console.log(`\n   Batch ${result.batch_number}`);
       console.log(`      Request ID  : ${result.request_id}`);
@@ -528,26 +568,52 @@ try {
     }
   }
 
-  // ──────────────────────────────
   // 8. FINAL SUMMARY
-  // ──────────────────────────────
   const completedCount = allBatchResults.filter(b => b.status === 'Completed').length;
-  const errorCount     = allBatchResults.filter(b => b.status !== 'Completed').length;
+  const errorCount = allBatchResults.filter(b => b.status !== 'Completed').length;
 
   console.log('\n====================================');
   console.log('ALL BATCHES COMPLETED!');
   console.log('====================================');
-  console.log('Run ID          :', runId);
-  console.log('Total Processed :', allBatchResults.length);
-  console.log('Completed       :', completedCount);
-  console.log('Errors          :', errorCount);
-  console.log('Total Charged   : $', totalCharged.toFixed(3));
-  console.log('\nOutput Links:');
-  allOutputLinks.forEach((link, i) => console.log(`  Batch ${i + 1} : ${link || 'Failed'}`));
+  console.log('Total Batches :', allBatchResults.length);
+  console.log('Completed     :', completedCount);
+  console.log('Errors        :', errorCount);
+  console.log('Total Charged : $', totalCharged.toFixed(3));
+  console.log('Package       :', packageName);
+  console.log('Language      :', language);
+  console.log('Company Info  :', companyInsights);
+  console.log('Phone Details :', phoneNumbersAndDetails);
   console.log('====================================');
 
-} catch (err) {
-  console.log('Error:', err.message);
-}
+  await Actor.pushData({
+    status: 'Completed',
+    package: packageName,
+    language,
+    companyInsights,
+    phoneNumbersAndDetails,
+    total_batches,
+    completed_batches: completedCount,
+    error_batches: errorCount,
+    total_charged: totalCharged,
+    master_file_url: masterFileUrl,
+    output_links: allOutputLinks,
+    batches: allBatchResults
+  });
 
-await Actor.exit();
+  console.log('Final output saved successfully.');
+} catch (err) {
+  console.error('Actor failed:', err);
+
+  try {
+    await Actor.pushData({
+      status: 'Error',
+      error: err.message || String(err)
+    });
+  } catch (pushErr) {
+    console.error('Failed to save error output:', pushErr);
+  }
+
+  throw err;
+} finally {
+  await Actor.exit();
+}
