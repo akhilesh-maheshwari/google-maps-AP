@@ -318,12 +318,10 @@
     "package": {
       "title": "📦 Package",
       "type": "string",
-      "description": "💳 Select the package you want to use.",
+      "description": "💳 Select your package.",
       "editor": "select",
       "enum": [
-        "Base Plan",
-        "Company Insights",
-        "Phone Numbers & Phone Details"
+        "Base Plan"
       ],
       "enumTitles": [
         "Base Plan"
